@@ -83,6 +83,7 @@ public class PlayerMovement : MonoBehaviour
 
     Vector2 BonusJump(Vector2 jumpVector)
     {
+        /*
         if (rb.linearVelocity.x == 0f)
         {
             bonusJumpCounter++;
@@ -93,7 +94,7 @@ public class PlayerMovement : MonoBehaviour
                 bonusJumpPS.Play();
             }
 
-        }
+        }*/
         return jumpVector;
     }
 
