@@ -51,7 +51,15 @@ public class PlayerMovement : MonoBehaviour
     {
         if (isOutOfScreen)
         {
-            transform.position = new Vector3(-transform.position.x, transform.position.y, transform.position.z);
+            if (transform.position.x < 0)
+            {
+                transform.position = new Vector3(-1f * (transform.position.x + 0.2f), transform.position.y, transform.position.z);
+            }
+            else if (transform.position.x > 0)
+            {
+                transform.position = new Vector3(-1f * (transform.position.x - 0.2f), transform.position.y, transform.position.z);
+            }
+
             isOutOfScreen = false;
         }
 

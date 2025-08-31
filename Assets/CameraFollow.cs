@@ -4,7 +4,7 @@ public class CameraFollow : MonoBehaviour
 {
     [SerializeField] private GameObject player;
     Transform playerTransform;
-    Camera camera;
+
     float cameraX = 0f;
     float cameraY = 0f;
     float cameraZ = -10f;
@@ -12,7 +12,7 @@ public class CameraFollow : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        camera = GetComponent<Camera>();
+
         playerTransform = player.GetComponent<Transform>();
         transform.position = new Vector3(cameraX, cameraY, cameraZ);
     }

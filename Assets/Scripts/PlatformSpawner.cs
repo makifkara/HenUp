@@ -14,13 +14,15 @@ public class PlatformSpawner : MonoBehaviour
     [SerializeField] private int poolTourCount = 0;
     float firstSpawnY = 0f;
     [SerializeField] private List<GameObject> platformPool = new List<GameObject>();
+    Vector3 poolPos = Vector3.left * 100f;
     int platformPoolIndex = 0;
     float difficultyMultiplier = 1f;
-
+    GameManager gameManager;
     GameObject lastSpawned;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        gameManager = GetComponent<GameManager>();
         firstSpawnY = basePlatform.transform.position.y + spawnGap;
         spawnY = firstSpawnY;
         PlatformPooling();
@@ -30,12 +32,22 @@ public class PlatformSpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (lastSpawned.transform.position.y - player.transform.position.y < 3 * spawnGap)
+        if (lastSpawned.transform.position.y - player.transform.position.y < 10 * spawnGap)
         {
             SpawnPlatform();
         }
     }
 
+    public void PutThePlatformBack()
+    {
+        foreach (GameObject platform in platformPool)
+        {
+            if (gameManager.myCamera.transform.position.y - platform.transform.position.y >= gameManager.deadZone)
+            {
+                platform.transform.position = poolPos;
+            }
+        }
+    }
     void SpawnPlatform()
     {
         float spawnX = Random.Range(-gameLimitX, gameLimitX);
@@ -64,17 +76,16 @@ public class PlatformSpawner : MonoBehaviour
         float spawnScaleX = Random.Range(platformWidth.x, platformWidth.y);
 
         spawnScaleX *= difficultyMultiplier;
-
-        Vector3 spawnScale = new Vector3(spawnScaleX, lastSpawned.transform.localScale.y, 1f);
-        if (spawnScale.x < 1f)
+        if (spawnScaleX < 0.6f)
         {
-            return Vector3.one;
+            spawnScaleX = 0.6f;
         }
+        Vector3 spawnScale = new Vector3(spawnScaleX, lastSpawned.transform.localScale.y, 1f);
+
         return spawnScale;
     }
     void PlatformPooling()
     {
-        Vector3 poolPos = new Vector3(-50f, 0f, 0f);
         for (int i = 0; i < poolCount; i++)
         {
             var go = Instantiate(platformPrefab, poolPos, Quaternion.identity);
