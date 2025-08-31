@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
         if (playerScore % 5 == 0)
         {
             platformSpawner.PutThePlatformBack();
+            platformSpawner.CheckSpawnCondition();
         }
     }
     void CheckIfGameOver()

@@ -19,6 +19,7 @@ public class PlatformSpawner : MonoBehaviour
     float difficultyMultiplier = 1f;
     GameManager gameManager;
     GameObject lastSpawned;
+    Vector3 lastSpawnPos;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -32,17 +33,20 @@ public class PlatformSpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+    }
+    public void CheckSpawnCondition()
+    {
         if (lastSpawned.transform.position.y - player.transform.position.y < 10 * spawnGap)
         {
             SpawnPlatform();
         }
     }
-
     public void PutThePlatformBack()
     {
         foreach (GameObject platform in platformPool)
         {
-            if (gameManager.myCamera.transform.position.y - platform.transform.position.y >= gameManager.deadZone)
+            if (gameManager.myCamera.transform.position.y - platform.transform.position.y >= gameManager.deadZone / 2f)
             {
                 platform.transform.position = poolPos;
             }
@@ -65,7 +69,7 @@ public class PlatformSpawner : MonoBehaviour
         }
         lastSpawned = platformPool[platformPoolIndex];
         lastSpawned.transform.position = spawnPos;
-
+        lastSpawnPos = lastSpawned.transform.position;
         lastSpawned.transform.localScale = RandomScaleByDifficulty(lastSpawned.transform);
         spawnY += spawnGap;
         platformPoolIndex++;
