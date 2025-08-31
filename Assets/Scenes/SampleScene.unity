@@ -155,7 +155,7 @@ MonoBehaviour:
   gameLimitX: 4
   platformWidth: {x: 1, y: 3}
   spawnGap: 1.75
-  poolCount: 20
+  poolCount: 40
   poolTourCount: 0
   platformPool: []
 --- !u!4 &167877498
@@ -187,7 +187,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerScore: 0
   player: {fileID: 1055905503}
-  deadZone: 15
+  deadZone: 30
   myCamera: {fileID: 519420031}
 --- !u!1 &360562901
 GameObject:
