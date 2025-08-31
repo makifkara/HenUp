@@ -54,18 +54,18 @@ public class PlatformSpawner : MonoBehaviour
         lastSpawned = platformPool[platformPoolIndex];
         lastSpawned.transform.position = spawnPos;
 
-        lastSpawned.transform.localScale = RandomScaleByDifficulty();
+        lastSpawned.transform.localScale = RandomScaleByDifficulty(lastSpawned.transform);
         spawnY += spawnGap;
         platformPoolIndex++;
     }
 
-    Vector3 RandomScaleByDifficulty()
+    Vector3 RandomScaleByDifficulty(Transform transform)
     {
         float spawnScaleX = Random.Range(platformWidth.x, platformWidth.y);
 
         spawnScaleX *= difficultyMultiplier;
 
-        Vector3 spawnScale = new Vector3(spawnScaleX, 1f, 1f);
+        Vector3 spawnScale = new Vector3(spawnScaleX, lastSpawned.transform.localScale.y, 1f);
         if (spawnScale.x < 1f)
         {
             return Vector3.one;

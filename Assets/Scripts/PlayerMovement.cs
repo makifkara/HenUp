@@ -1,6 +1,7 @@
 using System.Numerics;
 using UnityEngine;
 using Vector2 = UnityEngine.Vector2;
+using Vector3 = UnityEngine.Vector3;
 
 
 public class PlayerMovement : MonoBehaviour
@@ -28,6 +29,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private ParticleSystem bonusJumpPS;
     bool isGrounded;
 
+    [SerializeField] private float screenLimit;
+    bool isOutOfScreen = false;
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -36,6 +39,7 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
 
+        CheckIfOutOfScreen();
         moveInput = Input.GetAxisRaw("Horizontal");
 
 
@@ -45,6 +49,11 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (isOutOfScreen)
+        {
+            transform.position = new Vector3(-transform.position.x, transform.position.y, transform.position.z);
+            isOutOfScreen = false;
+        }
 
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundMask);
 
@@ -68,11 +77,14 @@ public class PlayerMovement : MonoBehaviour
         {
             if (coyoteCounter > 0)
             {
+                if (rb.linearVelocityY <= 0)
+                {
+                    rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
+                    Vector2 jumpVector = Vector2.up * jumpForce;
+                    jumpVector = BonusJump(jumpVector);
+                    rb.AddForce(jumpVector, ForceMode2D.Impulse);
+                }
 
-                rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
-                Vector2 jumpVector = Vector2.up * jumpForce;
-                jumpVector = BonusJump(jumpVector);
-                rb.AddForce(jumpVector, ForceMode2D.Impulse);
 
             }
 
@@ -80,7 +92,13 @@ public class PlayerMovement : MonoBehaviour
             coyoteCounter = 0;
         }
     }
-
+    void CheckIfOutOfScreen()
+    {
+        if (Mathf.Abs(transform.position.x) > screenLimit)
+        {
+            isOutOfScreen = true;
+        }
+    }
     Vector2 BonusJump(Vector2 jumpVector)
     {
         /*
