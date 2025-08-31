@@ -1,4 +1,6 @@
+using System.Numerics;
 using UnityEngine;
+using Vector2 = UnityEngine.Vector2;
 
 
 public class PlayerMovement : MonoBehaviour
@@ -18,7 +20,12 @@ public class PlayerMovement : MonoBehaviour
     float moveInput;
     bool jumpPressed;
 
-
+    float coyoteCounter;
+    [SerializeField] private float coyoteTime = 0.15f;
+    int bonusJumpCounter;
+    [SerializeField] private float xSpeedBonusLimit;
+    [SerializeField] private float bonusJumpMultiplier = 1.25f;
+    [SerializeField] private ParticleSystem bonusJumpPS;
     bool isGrounded;
 
     void Awake()
@@ -32,8 +39,8 @@ public class PlayerMovement : MonoBehaviour
         moveInput = Input.GetAxisRaw("Horizontal");
 
 
-        if (Input.GetKeyDown(KeyCode.Space))
-            jumpPressed = true;
+        //if (Input.GetKeyDown(KeyCode.Space))
+        jumpPressed = true;
     }
 
     void FixedUpdate()
@@ -46,19 +53,49 @@ public class PlayerMovement : MonoBehaviour
         v.x = moveInput * moveSpeed;
         rb.linearVelocity = v;
 
+        //rb.AddForce(Vector2.right * moveInput * moveSpeed, ForceMode2D.Force);
+        if (isGrounded)
+        {
+            coyoteCounter = coyoteTime;
+        }
+        else
+        {
+            coyoteCounter -= Time.deltaTime;
+
+        }
 
         if (jumpPressed)
         {
-            if (isGrounded)
+            if (coyoteCounter > 0)
             {
 
                 rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
-                rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+                Vector2 jumpVector = Vector2.up * jumpForce;
+                jumpVector = BonusJump(jumpVector);
+                rb.AddForce(jumpVector, ForceMode2D.Impulse);
+
             }
+
             jumpPressed = false;
+            coyoteCounter = 0;
         }
     }
 
+    Vector2 BonusJump(Vector2 jumpVector)
+    {
+        if (rb.linearVelocity.x == 0f)
+        {
+            bonusJumpCounter++;
+            if (bonusJumpCounter > 2)
+            {
+                jumpVector *= bonusJumpMultiplier;
+                bonusJumpCounter = 0;
+                bonusJumpPS.Play();
+            }
+
+        }
+        return jumpVector;
+    }
 
     void OnDrawGizmosSelected()
     {
