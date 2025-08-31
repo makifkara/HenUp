@@ -10,9 +10,10 @@ public class PlatformSpawner : MonoBehaviour
     [SerializeField] private Vector2 platformWidth;
     float spawnY = 0f;
     [SerializeField] private float spawnGap = 2.5f;
-    [SerializeField] private int poolCount = 50;
+    [SerializeField] private int poolCount = 10;
+    [SerializeField] private int poolTourCount = 0;
     float firstSpawnY = 0f;
-    List<GameObject> platformPool = new List<GameObject>();
+    [SerializeField] private List<GameObject> platformPool = new List<GameObject>();
     int platformPoolIndex = 0;
     float difficultyMultiplier = 1f;
 
@@ -39,9 +40,11 @@ public class PlatformSpawner : MonoBehaviour
     {
         float spawnX = Random.Range(-gameLimitX, gameLimitX);
         Vector3 spawnPos = new Vector3(spawnX, spawnY, 0f);
-        if (platformPoolIndex >= poolCount)
+        if (platformPoolIndex >= platformPool.Count)
         {
             platformPoolIndex = 0;
+            poolTourCount++;
+            difficultyMultiplier -= poolTourCount / 100f;
         }
         if (platformPool[platformPoolIndex] == null)
         {
@@ -59,13 +62,19 @@ public class PlatformSpawner : MonoBehaviour
     Vector3 RandomScaleByDifficulty()
     {
         float spawnScaleX = Random.Range(platformWidth.x, platformWidth.y);
+
         spawnScaleX *= difficultyMultiplier;
+
         Vector3 spawnScale = new Vector3(spawnScaleX, 1f, 1f);
+        if (spawnScale.x < 1f)
+        {
+            return Vector3.one;
+        }
         return spawnScale;
     }
     void PlatformPooling()
     {
-        Vector3 poolPos = new Vector3(-200f, 0f, 0f);
+        Vector3 poolPos = new Vector3(-50f, 0f, 0f);
         for (int i = 0; i < poolCount; i++)
         {
             var go = Instantiate(platformPrefab, poolPos, Quaternion.identity);
