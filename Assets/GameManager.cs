@@ -12,6 +12,19 @@ public class GameManager : MonoBehaviour
     Vector3 stayPos;
     public Camera myCamera;
     PlatformSpawner platformSpawner;
+    public static GameManager Instance;
+    void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
+
+    }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -28,6 +41,11 @@ public class GameManager : MonoBehaviour
             platformSpawner.PutThePlatformBack();
             platformSpawner.CheckSpawnCondition();
         }
+    }
+
+    public int GetScore()
+    {
+        return playerScore;
     }
     void CheckIfGameOver()
     {
