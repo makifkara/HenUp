@@ -1,6 +1,7 @@
 using Unity.VisualScripting;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -42,7 +43,10 @@ public class GameManager : MonoBehaviour
             platformSpawner.CheckSpawnCondition();
         }
     }
-
+    public void LoadScene(int SceneIndex)
+    {
+        SceneManager.LoadScene(SceneIndex);
+    }
     public int GetScore()
     {
         return playerScore;
