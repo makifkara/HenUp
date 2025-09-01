@@ -4,7 +4,7 @@ using UnityEngine;
 public class PlatformSpawner : MonoBehaviour
 {
     [SerializeField] private GameObject platformPrefab;
-    [SerializeField] private GameObject player;
+    GameObject player;
     [SerializeField] private GameObject basePlatform;
     [SerializeField] private float gameLimitX;
     [SerializeField] private Vector2 platformWidth;
@@ -17,15 +17,17 @@ public class PlatformSpawner : MonoBehaviour
     Vector3 poolPos = Vector3.left * 100f;
     int platformPoolIndex = 0;
     float difficultyMultiplier = 1f;
-    GameManager gameManager;
+
     GameObject lastSpawned;
     Vector3 lastSpawnPos;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        gameManager = GetComponent<GameManager>();
+        player = GameManager.Instance.GetPlayerObject();
         firstSpawnY = basePlatform.transform.position.y + spawnGap;
         spawnY = firstSpawnY;
+
+
         PlatformPooling();
         SpawnPlatform();
     }
@@ -37,7 +39,12 @@ public class PlatformSpawner : MonoBehaviour
     }
     public void CheckSpawnCondition()
     {
-        if (lastSpawned.transform.position.y - player.transform.position.y < 10 * spawnGap)
+        if (lastSpawned == null)
+        {
+            Debug.Log("fakk");
+            return;
+        }
+        if (lastSpawned.transform.position.y - GameManager.Instance.GetPlayerObject().transform.position.y < 10 * spawnGap)
         {
             SpawnPlatform();
         }
@@ -46,7 +53,7 @@ public class PlatformSpawner : MonoBehaviour
     {
         foreach (GameObject platform in platformPool)
         {
-            if (gameManager.myCamera.transform.position.y - platform.transform.position.y >= gameManager.deadZone / 2f)
+            if (GameManager.Instance.GetHighestY() - platform.transform.position.y >= GameManager.Instance.deadZone / 2f)
             {
                 platform.transform.position = poolPos;
             }
@@ -90,9 +97,10 @@ public class PlatformSpawner : MonoBehaviour
     }
     void PlatformPooling()
     {
+        platformPool.Clear();
         for (int i = 0; i < poolCount; i++)
         {
-            var go = Instantiate(platformPrefab, poolPos, Quaternion.identity);
+            var go = Instantiate(platformPrefab, transform);
             platformPool.Add(go);
         }
     }

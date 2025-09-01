@@ -19,6 +19,10 @@ public class UIManager : MonoBehaviour
 
     void WriteScore()
     {
+        if (scoreTMP == null)
+        {
+            return;
+        }
         scoreTMP.text = "Score: " + GameManager.Instance.GetScore().ToString();
     }
 }

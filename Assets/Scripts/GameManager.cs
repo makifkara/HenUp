@@ -6,24 +6,34 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private int playerScore = 0;
-    [SerializeField] private GameObject player;
+
     [SerializeField] public float deadZone;
     float highestY = 0f;
     float deadlyY = -10f;
     Vector3 stayPos;
-    public Camera myCamera;
-    PlatformSpawner platformSpawner;
+    bool isGameOn = false;
+    [SerializeField] private Vector3 startPos;
+
     public static GameManager Instance;
+
+    [Header("Object References")]
+    [SerializeField] private GameObject playerPrefab;
+    GameObject player;
+    PlatformSpawner platformSpawner;
+    public Camera myCamera;
+
     void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
+            DontDestroyOnLoad(this);
         }
         else
         {
             Destroy(this.gameObject);
         }
+        SceneManager.sceneLoaded += OnSceneLoaded;
 
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -35,14 +45,50 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        UpdatePlayerScore();
-        CheckIfGameOver();
-        if (playerScore % 5 == 0)
+        if (isGameOn)
         {
-            platformSpawner.PutThePlatformBack();
-            platformSpawner.CheckSpawnCondition();
+
+            UpdatePlayerScore();
+            CheckIfGameOver();
+            if (playerScore % 5 == 0)
+            {
+                platformSpawner.PutThePlatformBack();
+                platformSpawner.CheckSpawnCondition();
+            }
+        }
+
+    }
+    void SpawnPlayer()
+    {
+        player = Instantiate(playerPrefab, startPos, Quaternion.identity);
+
+    }
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        Debug.Log("OnSceneLoaded: " + scene.name);
+        if (scene.buildIndex == 1) // Game scene
+        {
+
+            GameOnRoutine();
+
+        }
+        else
+        {
+            GameOffRoutine();
         }
     }
+    void GameOnRoutine()
+    {
+        isGameOn = true;
+        SpawnPlayer();
+        platformSpawner.enabled = true;
+    }
+    void GameOffRoutine()
+    {
+        isGameOn = false;
+        //platformSpawner.enabled = false;
+    }
+
     public void LoadScene(int SceneIndex)
     {
         SceneManager.LoadScene(SceneIndex);
@@ -50,6 +96,10 @@ public class GameManager : MonoBehaviour
     public int GetScore()
     {
         return playerScore;
+    }
+    public float GetHighestY()
+    {
+        return highestY;
     }
     void CheckIfGameOver()
     {
@@ -79,4 +129,26 @@ public class GameManager : MonoBehaviour
         }
         playerScore = (int)highestY;
     }
+
+    public bool IsGameOn()
+    {
+        return isGameOn;
+    }
+    public GameObject GetPlayerObject()
+    {
+        if (player == null)
+        {
+            return null;
+        }
+        return player;
+    }
+    public PlatformSpawner GetPlatformSpawner()
+    {
+        if (platformSpawner == null)
+        {
+            return null;
+        }
+        return platformSpawner;
+    }
+
 }
