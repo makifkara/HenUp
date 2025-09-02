@@ -2,6 +2,7 @@ using Unity.VisualScripting;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -14,7 +15,7 @@ public class GameManager : MonoBehaviour
     bool isGameOn = false;
     [SerializeField] private Vector3 startPos;
 
-    public static GameManager Instance;
+    public static GameManager Instance { get; private set; }
 
     [Header("Object References")]
     [SerializeField] private GameObject playerPrefab;
@@ -24,15 +25,15 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        if (Instance == null)
+
+        //Bir örnek varsa ve ben değilse, yoket. 
+        if (Instance != null && Instance != this)
         {
-            Instance = this;
-            DontDestroyOnLoad(this);
+            Destroy(this);
+            return;
         }
-        else
-        {
-            Destroy(this.gameObject);
-        }
+        Instance = this;
+        DontDestroyOnLoad(this.gameObject);
         SceneManager.sceneLoaded += OnSceneLoaded;
 
     }

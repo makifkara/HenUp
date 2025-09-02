@@ -1,14 +1,24 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI scoreTMP;
+    [SerializeField] private Button leftButton;
+    [SerializeField] private Button rightButton;
+    PlayerMovement playerMovement;
 
+    private void Awake()
+    {
+
+    }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         WriteScore();
+        playerMovement = FindFirstObjectByType<PlayerMovement>();
+
     }
 
     // Update is called once per frame
@@ -25,8 +35,22 @@ public class UIManager : MonoBehaviour
         }
         scoreTMP.text = "Score: " + GameManager.Instance.GetScore().ToString();
     }
-    public void ButtonClickSFX()
+
+    public void HandleMovementUI(float input)
     {
-        AudioManager.Instance.PlaySFX(AudioManager.SFXClip.click);
+        Debug.Log("player movement.cs found? " + playerMovement.gameObject.name);
+        if (playerMovement == null)
+        {
+            playerMovement = FindFirstObjectByType<PlayerMovement>();
+
+            playerMovement.SetMoveInput(input);
+            Debug.Log("Move input: " + input);
+        }
+        else
+        {
+            playerMovement.SetMoveInput(input);
+            Debug.Log("Move input: " + input);
+        }
     }
+
 }

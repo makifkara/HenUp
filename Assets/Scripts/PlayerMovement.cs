@@ -91,6 +91,7 @@ public class PlayerMovement : MonoBehaviour
                     Vector2 jumpVector = Vector2.up * jumpForce;
                     jumpVector = BonusJump(jumpVector);
                     rb.AddForce(jumpVector, ForceMode2D.Impulse);
+                    AudioManager.Instance.PlaySFX(AudioManager.SFXClip.jump);
                 }
 
 
@@ -99,6 +100,11 @@ public class PlayerMovement : MonoBehaviour
             jumpPressed = false;
             coyoteCounter = 0;
         }
+    }
+
+    public void SetMoveInput(float MoveInput)
+    {
+        moveInput = MoveInput;
     }
     void CheckIfOutOfScreen()
     {

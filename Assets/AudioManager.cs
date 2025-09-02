@@ -17,7 +17,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip buttonClickSFX;
     [SerializeField] private AudioClip bestScoreSFX;
 
-    public static AudioManager Instance;
+    public static AudioManager Instance { get; private set; }
 
     public enum SFXClip
     {
@@ -33,15 +33,13 @@ public class AudioManager : MonoBehaviour
     }
     void Awake()
     {
-        if (Instance == null)
+        if (Instance != null && Instance != this)
         {
-            Instance = this;
-            DontDestroyOnLoad(Instance);
+            Destroy(this);
+            return;
         }
-        else
-        {
-            Destroy(this.gameObject);
-        }
+        Instance = this;
+        DontDestroyOnLoad(this.gameObject);
 
 
     }
@@ -49,6 +47,19 @@ public class AudioManager : MonoBehaviour
     void Start()
     {
         //Default Settings
+        SetDefaultAudioSettings();
+
+
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
+    public void SetDefaultAudioSettings()
+    {
         if (!PlayerPrefs.HasKey("isMuted"))
         {
             PlayerPrefs.SetInt("isMuted", 0);
@@ -68,39 +79,34 @@ public class AudioManager : MonoBehaviour
         musicSource.Play();
         sfxLevel = PlayerPrefs.GetFloat("sfxlevel");
         sFXSource.volume = sfxLevel;
-
-
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    public void Mute()
-    {
-        if (isMuted)
-        {
-            return;
-        }
-        SetVolume(AudioType.music, 0f);
-        SetVolume(AudioType.sfx, 0f);
-        PlayerPrefs.SetInt("isMuted", 1);
-        PlayerPrefs.Save();
-        isMuted = true;
-    }
-    public void Unmute()
+    public void MuteUnmute()
     {
         if (!isMuted)
         {
-            return;
+            /*
+            SetVolume(AudioType.music, 0f);
+            SetVolume(AudioType.sfx, 0f);
+            */
+            musicSource.volume = 0f;
+            sFXSource.volume = 0f;
+            PlayerPrefs.SetInt("isMuted", 1);
+            PlayerPrefs.Save();
+            isMuted = true;
+            Debug.Log(isMuted);
         }
-        SetVolume(AudioType.music, PlayerPrefs.GetFloat("musiclevel"));
-        SetVolume(AudioType.sfx, PlayerPrefs.GetFloat("sfxlevel"));
-        PlayerPrefs.SetInt("isMuted", 0);
-        PlayerPrefs.Save();
-        isMuted = false;
+        else if (isMuted)
+        {
+            //SetVolume(AudioType.music, PlayerPrefs.GetFloat("musiclevel"));
+            //SetVolume(AudioType.sfx, PlayerPrefs.GetFloat("sfxlevel"));
+            PlayerPrefs.SetInt("isMuted", 0);
+            SetDefaultAudioSettings();
+
+            PlayerPrefs.Save();
+            isMuted = false;
+            Debug.Log(isMuted);
+        }
+
     }
     public void SetVolume(AudioType type, float volume)
     {
@@ -108,6 +114,7 @@ public class AudioManager : MonoBehaviour
         {
             case AudioType.music:
                 PlayerPrefs.SetFloat("musiclevel", volume);
+                Debug.Log("Music volume set at AM: " + volume.ToString());
                 PlayerPrefs.Save();
                 musicLevel = PlayerPrefs.GetFloat("musiclevel");
                 musicSource.volume = musicLevel;
