@@ -25,4 +25,8 @@ public class UIManager : MonoBehaviour
         }
         scoreTMP.text = "Score: " + GameManager.Instance.GetScore().ToString();
     }
+    public void ButtonClickSFX()
+    {
+        AudioManager.Instance.PlaySFX(AudioManager.SFXClip.click);
+    }
 }
