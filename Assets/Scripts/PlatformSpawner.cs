@@ -58,6 +58,7 @@ public class PlatformSpawner : MonoBehaviour
                 platform.transform.position = poolPos;
             }
         }
+
     }
     void SpawnPlatform()
     {

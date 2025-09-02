@@ -61,21 +61,30 @@ public class GameManager : MonoBehaviour
     }
     void SpawnPlayer()
     {
+        if (player != null)
+        {
+            Destroy(player);
+        }
         player = Instantiate(playerPrefab, startPos, Quaternion.identity);
 
     }
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        if (player != null) Destroy(player);
         Debug.Log("OnSceneLoaded: " + scene.name);
         if (scene.buildIndex == 1) // Game scene
         {
-
+            playerScore = 0;
+            deadlyY = -5000;
+            highestY = 0;
             GameOnRoutine();
 
         }
         else
         {
             GameOffRoutine();
+
+
         }
     }
     void GameOnRoutine()
@@ -118,6 +127,14 @@ public class GameManager : MonoBehaviour
         player.GetComponent<PlayerMovement>().enabled = false;
         Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
         rb.constraints = RigidbodyConstraints2D.FreezeAll;
+        PlayerPrefs.DeleteKey("lastscore");
+        PlayerPrefs.SetInt("lastscore", playerScore);
+        if (PlayerPrefs.GetInt("bestscore") <= PlayerPrefs.GetInt("lastscore"))
+        {
+            PlayerPrefs.SetInt("bestscore", PlayerPrefs.GetInt("lastscore"));
+        }
+
+        LoadScene(2);
     }
     void UpdatePlayerScore()
     {
