@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    [SerializeField] private GameObject player;
+
     Transform playerTransform;
 
     float cameraX = 0f;
@@ -12,15 +12,21 @@ public class CameraFollow : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        if (GameManager.Instance.IsGameOn())
+        {
+            playerTransform = GameManager.Instance.GetPlayerObject().GetComponent<Transform>();
+        }
 
-        playerTransform = player.GetComponent<Transform>();
         transform.position = new Vector3(cameraX, cameraY, cameraZ);
     }
 
     // Update is called once per frame
     void Update()
     {
-        cameraY = playerTransform.position.y;
+        if (GameManager.Instance.IsGameOn())
+        {
+            cameraY = playerTransform.position.y;
+        }
         transform.position = new Vector3(cameraX, cameraY, cameraZ);
     }
 

@@ -43,6 +43,7 @@ UserSettings/
 MemoryCaptures/
 Recordings/
 Assets/AssetStoreTools*
+Assets/Resources/
 
 # Cache
 # (optional – keep if you want faster import at cost of large repo)
