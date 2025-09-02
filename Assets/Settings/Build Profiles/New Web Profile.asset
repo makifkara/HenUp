@@ -26,10 +26,6 @@ MonoBehaviour:
     m_path: Assets/Scenes/1Game.unity
   - m_enabled: 1
     m_path: Assets/Scenes/2GameOver.unity
-  - m_enabled: 1
-    m_path: Assets/Scenes/3Settings.unity
-  - m_enabled: 1
-    m_path: Assets/Scenes/4HowToPlay.unity
   m_ScriptingDefines: []
   m_PlayerSettingsYaml:
     m_Settings: []
