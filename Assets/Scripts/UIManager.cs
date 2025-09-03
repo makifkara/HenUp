@@ -38,7 +38,7 @@ public class UIManager : MonoBehaviour
 
     public void HandleMovementUI(float input)
     {
-        Debug.Log("player movement.cs found? " + playerMovement.gameObject.name);
+
         if (playerMovement == null)
         {
             playerMovement = FindFirstObjectByType<PlayerMovement>();

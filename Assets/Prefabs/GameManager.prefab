@@ -46,7 +46,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   platformPrefab: {fileID: 4198856217044564005, guid: 6209d187a6ccd4ffe9fd8258e4396439, type: 3}
-  basePlatform: {fileID: 0}
+  basePlatform: {fileID: 640987367857900481, guid: eeb05b844f60e449396a1a89698012f4, type: 3}
+  baseSpawn: {x: 0, y: 0, z: 0}
   gameLimitX: 4
   platformWidth: {x: 1, y: 3}
   spawnGap: 1.75

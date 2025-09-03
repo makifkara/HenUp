@@ -1,8 +1,7 @@
-using Unity.VisualScripting;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,7 +11,7 @@ public class GameManager : MonoBehaviour
     float highestY = 0f;
     float deadlyY = -10f;
     Vector3 stayPos;
-    bool isGameOn = false;
+
     [SerializeField] private Vector3 startPos;
 
     public static GameManager Instance { get; private set; }
@@ -22,14 +21,23 @@ public class GameManager : MonoBehaviour
     GameObject player;
     PlatformSpawner platformSpawner;
     public Camera myCamera;
-
+    public static event Action OnGameStarted;
+    public static event Action OnGameFinished;
+    public static event Action OnBestScore;
+    GameState gameState;
+    public enum GameState
+    {
+        Mainmenu,
+        Play,
+        GameOver,
+    }
     void Awake()
     {
 
         //Bir örnek varsa ve ben değilse, yoket. 
         if (Instance != null && Instance != this)
         {
-            Destroy(this);
+            Destroy(gameObject);
             return;
         }
         Instance = this;
@@ -41,21 +49,28 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         platformSpawner = GetComponent<PlatformSpawner>();
+        //PlatformSpawner.OnPlatformSpawn += SetPlayerActive;
+        //SpawnPlayer();
+        //player.SetActive(false);
     }
 
+    void SetPlayerActive()
+    {
+        player.SetActive(true);
+    }
     // Update is called once per frame
     void Update()
     {
-        if (isGameOn)
+        if (gameState == GameState.Play)
         {
 
             UpdatePlayerScore();
             CheckIfGameOver();
-            if (playerScore % 5 == 0)
-            {
-                platformSpawner.PutThePlatformBack();
-                platformSpawner.CheckSpawnCondition();
-            }
+
+        }
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            PlayerPrefs.DeleteAll();
         }
 
     }
@@ -70,34 +85,48 @@ public class GameManager : MonoBehaviour
     }
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (player != null) Destroy(player);
+
         Debug.Log("OnSceneLoaded: " + scene.name);
-        if (scene.buildIndex == 1) // Game scene
+        switch (scene.buildIndex)
         {
-            playerScore = 0;
-            deadlyY = -5000;
-            highestY = 0;
-            GameOnRoutine();
+            case 0:
+                gameState = GameState.Mainmenu;
 
+                break;
+            case 1:
+                SpawnPlayer();
+                gameState = GameState.Play;
+
+                StartGame();
+                break;
+            case 2:
+                gameState = GameState.GameOver;
+                OnBestScore?.Invoke();
+                OnGameFinished?.Invoke();
+                break;
+            case 3:
+                gameState = GameState.Mainmenu;
+                break;
+            default:
+                break;
         }
-        else
-        {
-            GameOffRoutine();
+    }
+    void Cleaner()
+    {
+        playerScore = 0;
+        deadlyY = 0;
+        highestY = 0;
+    }
+    void StartGame()
+    {
+        Cleaner();
 
 
-        }
+        OnGameStarted?.Invoke();
+
+
     }
-    void GameOnRoutine()
-    {
-        isGameOn = true;
-        SpawnPlayer();
-        platformSpawner.enabled = true;
-    }
-    void GameOffRoutine()
-    {
-        isGameOn = false;
-        //platformSpawner.enabled = false;
-    }
+
 
     public void LoadScene(int SceneIndex)
     {
@@ -105,6 +134,7 @@ public class GameManager : MonoBehaviour
     }
     public int GetScore()
     {
+        Debug.Log("Get score: " + playerScore);
         return playerScore;
     }
     public float GetHighestY()
@@ -115,6 +145,10 @@ public class GameManager : MonoBehaviour
     {
         if (player == null)
         { return; }
+        if (player.transform.position.y < deadZone / 3)
+        {
+            //return;
+        }
         if (player.transform.position.y < deadlyY)
         {
             stayPos = player.transform.position;
@@ -123,18 +157,22 @@ public class GameManager : MonoBehaviour
     }
     void GameOver()
     {
+        UpdatePlayerScore();
         player.transform.position = stayPos;
         player.GetComponent<PlayerMovement>().enabled = false;
         Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
         rb.constraints = RigidbodyConstraints2D.FreezeAll;
         PlayerPrefs.DeleteKey("lastscore");
         PlayerPrefs.SetInt("lastscore", playerScore);
+
         if (PlayerPrefs.GetInt("bestscore") <= PlayerPrefs.GetInt("lastscore"))
         {
             PlayerPrefs.SetInt("bestscore", PlayerPrefs.GetInt("lastscore"));
         }
 
+        Destroy(player);
         LoadScene(2);
+
     }
     void UpdatePlayerScore()
     {
@@ -148,9 +186,9 @@ public class GameManager : MonoBehaviour
         playerScore = (int)highestY;
     }
 
-    public bool IsGameOn()
+    public GameState GetGameState()
     {
-        return isGameOn;
+        return gameState;
     }
     public GameObject GetPlayerObject()
     {

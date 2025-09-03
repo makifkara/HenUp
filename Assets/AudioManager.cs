@@ -74,10 +74,13 @@ public class AudioManager : MonoBehaviour
         }
         isMuted = PlayerPrefs.GetInt("isMuted") > 0;
         musicLevel = PlayerPrefs.GetFloat("musiclevel");
+        Debug.Log("GOT DEFAULT Music volume from prefs at AM: " + musicLevel.ToString());
         musicSource.volume = musicLevel;
         musicSource.clip = bgmLoop;
         musicSource.Play();
+
         sfxLevel = PlayerPrefs.GetFloat("sfxlevel");
+        Debug.Log("GOT DEFAULT SFX volume from prefs at AM: " + sfxLevel.ToString());
         sFXSource.volume = sfxLevel;
     }
     public void MuteUnmute()
@@ -100,7 +103,7 @@ public class AudioManager : MonoBehaviour
             //SetVolume(AudioType.music, PlayerPrefs.GetFloat("musiclevel"));
             //SetVolume(AudioType.sfx, PlayerPrefs.GetFloat("sfxlevel"));
             PlayerPrefs.SetInt("isMuted", 0);
-            SetDefaultAudioSettings();
+            //SetDefaultAudioSettings();
 
             PlayerPrefs.Save();
             isMuted = false;
@@ -121,6 +124,7 @@ public class AudioManager : MonoBehaviour
                 break;
             case AudioType.sfx:
                 PlayerPrefs.SetFloat("sfxlevel", volume);
+                Debug.Log("SFX volume set at AM: " + volume.ToString());
                 PlayerPrefs.Save();
                 sfxLevel = PlayerPrefs.GetFloat("sfxlevel");
                 sFXSource.volume = sfxLevel;
