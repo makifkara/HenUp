@@ -309,7 +309,7 @@ MonoBehaviour:
   musicLevel: 1
   sFXSource: {fileID: 3790007850904006555}
   sfxLevel: 1
-  jumpSFX: {fileID: 0}
+  jumpSFX: {fileID: 8300000, guid: e64640a39e7014ec1b70cb6f99064848, type: 3}
   diedSFX: {fileID: 0}
-  buttonClickSFX: {fileID: 0}
+  buttonClickSFX: {fileID: 8300000, guid: 6ba9118db0f8c4a0e87ae6013dd90630, type: 3}
   bestScoreSFX: {fileID: 0}

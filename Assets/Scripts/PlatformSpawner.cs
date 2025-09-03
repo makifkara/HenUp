@@ -1,11 +1,15 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class PlatformSpawner : MonoBehaviour
 {
     [SerializeField] private GameObject platformPrefab;
     GameObject player;
-    [SerializeField] private GameObject basePlatform;
+    [SerializeField] private GameObject basePlatformPrefab;
+    GameObject basePlatform;
+    [SerializeField] private Vector3 baseSpawn;
     [SerializeField] private float gameLimitX;
     [SerializeField] private Vector2 platformWidth;
     float spawnY = 0f;
@@ -20,21 +24,72 @@ public class PlatformSpawner : MonoBehaviour
 
     GameObject lastSpawned;
     Vector3 lastSpawnPos;
+    int basePlatformSpawned = 0;
+    public static Action OnPlatformSpawn;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        player = GameManager.Instance.GetPlayerObject();
-        firstSpawnY = basePlatform.transform.position.y + spawnGap;
-        spawnY = firstSpawnY;
+        platformPool.Clear();
 
 
-        PlatformPooling();
-        SpawnPlatform();
+    }
+    private void OnEnable()
+    {
+
+
     }
 
     // Update is called once per frame
     void Update()
     {
+        HandleGameState();
+    }
+    void HandleGameState()
+    {
+        switch (GameManager.Instance.GetGameState())
+        {
+            case GameManager.GameState.Mainmenu:
+                PlatformPooling();
+                GameManager.OnGameStarted += CheckSpawnCondition;
+                GameManager.OnGameFinished += PutAllPlatformsBack;
+                break;
+            case GameManager.GameState.Play:
+
+                if (GameManager.Instance.GetScore() % 5 == 0)
+                {
+                    PutThePlatformBack();
+                    //CheckSpawnCondition();
+                }
+                break;
+            case GameManager.GameState.GameOver:
+                Cleaner();
+                GameManager.OnGameStarted -= SpawnPlatform;
+                GameManager.OnGameFinished -= PutAllPlatformsBack;
+
+                break;
+            default:
+                break;
+        }
+    }
+
+    void PutAllPlatformsBack()
+    {
+        basePlatform.transform.position = poolPos;
+        foreach (GameObject platform in platformPool)
+        {
+            platform.transform.position = poolPos;
+        }
+
+    }
+    void Cleaner()
+    {
+        lastSpawned = null;
+        basePlatformSpawned = 0;
+        firstSpawnY = 0;
+        spawnY = 0;
+        lastSpawnPos = Vector3.zero;
+        platformPoolIndex = 0;
+        poolTourCount = 0;
 
     }
     public void CheckSpawnCondition()
@@ -44,13 +99,20 @@ public class PlatformSpawner : MonoBehaviour
             Debug.Log("fakk");
             return;
         }
-        if (lastSpawned.transform.position.y - GameManager.Instance.GetPlayerObject().transform.position.y < 10 * spawnGap)
+        float playerGap = lastSpawned.transform.position.y - GameManager.Instance.GetPlayerObject().transform.position.y;
+        Debug.Log("---Player Gap : " + playerGap);
+        if (playerGap < 10 * spawnGap)
         {
+            Debug.Log("SPAWN CONDİTİON CHECKED!" + playerGap);
             SpawnPlatform();
         }
     }
     public void PutThePlatformBack()
     {
+        if (GameManager.Instance.GetHighestY() - baseSpawn.y >= GameManager.Instance.deadZone / 2f)
+        {
+            basePlatform.transform.position = poolPos;
+        }
         foreach (GameObject platform in platformPool)
         {
             if (GameManager.Instance.GetHighestY() - platform.transform.position.y >= GameManager.Instance.deadZone / 2f)
@@ -62,6 +124,18 @@ public class PlatformSpawner : MonoBehaviour
     }
     void SpawnPlatform()
     {
+        if (basePlatformSpawned == 0)
+        {
+            basePlatform.transform.position = baseSpawn;
+            firstSpawnY = basePlatform.transform.position.y + spawnGap;
+            spawnY = firstSpawnY;
+            OnPlatformSpawn?.Invoke();
+            lastSpawned = basePlatform;
+            player = GameManager.Instance.GetPlayerObject();
+            basePlatformSpawned = 1;
+
+        }
+
         float spawnX = Random.Range(-gameLimitX, gameLimitX);
         Vector3 spawnPos = new Vector3(spawnX, spawnY, 0f);
         if (platformPoolIndex >= platformPool.Count)
@@ -76,11 +150,13 @@ public class PlatformSpawner : MonoBehaviour
             return;
         }
         lastSpawned = platformPool[platformPoolIndex];
+        //Debug.Log("LAST SPAWNED POS: " + lastSpawnPos);
         lastSpawned.transform.position = spawnPos;
         lastSpawnPos = lastSpawned.transform.position;
         lastSpawned.transform.localScale = RandomScaleByDifficulty(lastSpawned.transform);
         spawnY += spawnGap;
         platformPoolIndex++;
+        Debug.Log("platform pool index : " + platformPoolIndex);
     }
 
     Vector3 RandomScaleByDifficulty(Transform transform)
@@ -98,10 +174,18 @@ public class PlatformSpawner : MonoBehaviour
     }
     void PlatformPooling()
     {
-        platformPool.Clear();
+        if (platformPool.Count > 0)
+        {
+            return;
+        }
+
+        basePlatform = Instantiate(basePlatformPrefab, transform);
+        basePlatform.transform.position = poolPos;
+        basePlatformSpawned = 0;
         for (int i = 0; i < poolCount; i++)
         {
             var go = Instantiate(platformPrefab, transform);
+            go.transform.position = poolPos;
             platformPool.Add(go);
         }
     }
