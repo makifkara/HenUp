@@ -74,13 +74,13 @@ public class AudioManager : MonoBehaviour
         }
         isMuted = PlayerPrefs.GetInt("isMuted") > 0;
         musicLevel = PlayerPrefs.GetFloat("musiclevel");
-        Debug.Log("GOT DEFAULT Music volume from prefs at AM: " + musicLevel.ToString());
+
         musicSource.volume = musicLevel;
         musicSource.clip = bgmLoop;
         musicSource.Play();
 
         sfxLevel = PlayerPrefs.GetFloat("sfxlevel");
-        Debug.Log("GOT DEFAULT SFX volume from prefs at AM: " + sfxLevel.ToString());
+
         sFXSource.volume = sfxLevel;
     }
     public void MuteUnmute()
