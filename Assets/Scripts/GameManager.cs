@@ -1,5 +1,3 @@
-using Unity.VisualScripting;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
@@ -39,7 +37,7 @@ public class GameManager : MonoBehaviour
         //Bir örnek varsa ve ben değilse, yoket. 
         if (Instance != null && Instance != this)
         {
-            Destroy(this);
+            Destroy(gameObject);
             return;
         }
         Instance = this;

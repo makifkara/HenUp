@@ -37,8 +37,13 @@ public class PlatformSpawner : MonoBehaviour
     }
     private void OnEnable()
     {
-
-
+        GameManager.OnGameStarted += SpawnPlatform;
+        GameManager.OnGameFinished += PutAllPlatformsBack;
+    }
+    void OnDisable()
+    {
+        GameManager.OnGameStarted -= SpawnPlatform;
+        GameManager.OnGameFinished -= PutAllPlatformsBack;
     }
 
     // Update is called once per frame
@@ -52,9 +57,7 @@ public class PlatformSpawner : MonoBehaviour
         {
             case GameManager.GameState.Mainmenu:
                 PlatformPooling();
-                GameManager.OnGameStarted += SpawnPlatform;
 
-                GameManager.OnGameFinished += PutAllPlatformsBack;
                 break;
             case GameManager.GameState.Play:
 
@@ -66,10 +69,7 @@ public class PlatformSpawner : MonoBehaviour
                 break;
             case GameManager.GameState.GameOver:
                 Cleaner();
-                GameManager.OnGameStarted -= SpawnPlatform;
-                GameManager.OnGameFinished -= PutAllPlatformsBack;
-                GameManager.OnGameStarted += SpawnPlatform;
-                GameManager.OnGameFinished += PutAllPlatformsBack;
+
 
                 break;
             default:

@@ -18,12 +18,17 @@ public class CameraFollow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        transform.position = new Vector3(cameraX, cameraY, cameraZ);
         if (GameManager.Instance.GetGameState() == GameManager.GameState.Play)
         {
             playerTransform = GameManager.Instance.GetPlayerObject().GetComponent<Transform>();
+            if (playerTransform == null)
+            {
+                return;
+            }
             cameraY = playerTransform.position.y;
         }
-        transform.position = new Vector3(cameraX, cameraY, cameraZ);
+
     }
 
     void FixedUpdate()

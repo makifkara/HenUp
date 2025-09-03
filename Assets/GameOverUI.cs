@@ -12,11 +12,10 @@ public class GameOverUI : MonoBehaviour
     void Start()
     {
         bestscoreTMP.color = Color.white;
-
+        GameManager.OnGameFinished += UpdateScores;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void UpdateScores()
     {
         lastscore = PlayerPrefs.GetInt("lastscore");
         scoreTMP.text = "SCORE: " + lastscore.ToString();
@@ -28,6 +27,5 @@ public class GameOverUI : MonoBehaviour
         {
             bestscoreTMP.color = Color.green;
         }
-
     }
 }
