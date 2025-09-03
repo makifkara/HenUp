@@ -13,19 +13,21 @@ public class GameOverUI : MonoBehaviour
     {
         bestscoreTMP.color = Color.white;
         GameManager.OnGameFinished += UpdateScores;
+        GameManager.OnBestScore += GotBestScore;
     }
 
     public void UpdateScores()
     {
+        Debug.Log("Score updated on gameoverui");
         lastscore = PlayerPrefs.GetInt("lastscore");
         scoreTMP.text = "SCORE: " + lastscore.ToString();
 
         bestscore = PlayerPrefs.GetInt("bestscore");
         bestscoreTMP.text = "BEST SCORE: " + bestscore.ToString();
 
-        if (lastscore >= bestscore)
-        {
-            bestscoreTMP.color = Color.green;
-        }
+    }
+    void GotBestScore()
+    {
+        bestscoreTMP.color = Color.green;
     }
 }

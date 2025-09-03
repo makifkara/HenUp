@@ -8,7 +8,7 @@ public class CameraFollow : MonoBehaviour
     float cameraX = 0f;
     float cameraY = 0f;
     float cameraZ = -10f;
-    float cameraSpeed = 1f;
+    //float cameraSpeed = 1f;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -18,7 +18,7 @@ public class CameraFollow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position = new Vector3(cameraX, cameraY, cameraZ);
+
         if (GameManager.Instance.GetGameState() == GameManager.GameState.Play)
         {
             playerTransform = GameManager.Instance.GetPlayerObject().GetComponent<Transform>();
@@ -28,7 +28,7 @@ public class CameraFollow : MonoBehaviour
             }
             cameraY = playerTransform.position.y;
         }
-
+        transform.position = new Vector3(cameraX, cameraY, cameraZ);
     }
 
     void FixedUpdate()

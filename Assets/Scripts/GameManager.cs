@@ -97,6 +97,7 @@ public class GameManager : MonoBehaviour
                 break;
             case 2:
                 gameState = GameState.GameOver;
+
                 break;
             case 3:
                 gameState = GameState.Mainmenu;
@@ -158,12 +159,13 @@ public class GameManager : MonoBehaviour
         rb.constraints = RigidbodyConstraints2D.FreezeAll;
         PlayerPrefs.DeleteKey("lastscore");
         PlayerPrefs.SetInt("lastscore", playerScore);
+        //gameState = GameState.GameOver;
         if (PlayerPrefs.GetInt("bestscore") <= PlayerPrefs.GetInt("lastscore"))
         {
             PlayerPrefs.SetInt("bestscore", PlayerPrefs.GetInt("lastscore"));
+            OnBestScore?.Invoke();
         }
         OnGameFinished?.Invoke();
-        gameState = GameState.GameOver;
         Destroy(player);
         LoadScene(2);
 

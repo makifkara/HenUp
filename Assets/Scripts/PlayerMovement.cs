@@ -25,7 +25,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float coyoteTime = 0.15f;
     int bonusJumpCounter;
     [SerializeField] private float xSpeedBonusLimit;
-    [SerializeField] private float bonusJumpMultiplier = 1.25f;
+    //[SerializeField] private float bonusJumpMultiplier = 1.25f;
     [SerializeField] private ParticleSystem bonusJumpPS;
     bool isGrounded;
 
