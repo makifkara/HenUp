@@ -68,6 +68,10 @@ public class GameManager : MonoBehaviour
             CheckIfGameOver();
 
         }
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            PlayerPrefs.DeleteAll();
+        }
 
     }
     void SpawnPlayer()

@@ -701,7 +701,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1738905854}
         m_TargetAssemblyTypeName: SettingsPanel, Assembly-CSharp
-        m_MethodName: VolumeSliderUpdate
+        m_MethodName: SFXVolumeUpdate
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1987,7 +1987,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1738905854}
         m_TargetAssemblyTypeName: SettingsPanel, Assembly-CSharp
-        m_MethodName: VolumeSliderUpdate
+        m_MethodName: MusicVolumeUpdate
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

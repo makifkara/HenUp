@@ -13,24 +13,23 @@ public class SettingsPanel : MonoBehaviour
 
         // sfxVolumeSlider.value = PlayerPrefs.GetFloat("sfxlevel");
         // Debug.Log("INITIAL SFX volume set at UIM: " + sfxVolumeSlider.value.ToString());
+        musicVolumeSlider.value = PlayerPrefs.GetFloat("musiclevel");
+        sfxVolumeSlider.value = PlayerPrefs.GetFloat("sfxlevel");
     }
 
     // Update is called once per frame
     void Update()
     {
-        musicVolumeSlider.value = PlayerPrefs.GetFloat("musiclevel");
+
+    }
+    public void SFXVolumeUpdate()
+    {
+        AudioManager.Instance.SetVolume(AudioManager.AudioType.sfx, sfxVolumeSlider.value);
         sfxVolumeSlider.value = PlayerPrefs.GetFloat("sfxlevel");
     }
-    public void VolumeSliderUpdate()
+    public void MusicVolumeUpdate()
     {
         AudioManager.Instance.SetVolume(AudioManager.AudioType.music, musicVolumeSlider.value);
         musicVolumeSlider.value = PlayerPrefs.GetFloat("musiclevel");
-
-        Debug.Log("Music volume set at UIM: " + musicVolumeSlider.value.ToString());
-
-        AudioManager.Instance.SetVolume(AudioManager.AudioType.sfx, sfxVolumeSlider.value);
-        sfxVolumeSlider.value = PlayerPrefs.GetFloat("sfxlevel");
-
-
     }
 }
