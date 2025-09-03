@@ -51,9 +51,9 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         platformSpawner = GetComponent<PlatformSpawner>();
-        PlatformSpawner.OnPlatformSpawn += SetPlayerActive;
-        SpawnPlayer();
-        player.SetActive(false);
+        //PlatformSpawner.OnPlatformSpawn += SetPlayerActive;
+        //SpawnPlayer();
+        //player.SetActive(false);
     }
 
     void SetPlayerActive()
@@ -83,7 +83,7 @@ public class GameManager : MonoBehaviour
     }
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (player != null) Destroy(player);
+
         Debug.Log("OnSceneLoaded: " + scene.name);
         switch (scene.buildIndex)
         {
@@ -92,6 +92,7 @@ public class GameManager : MonoBehaviour
 
                 break;
             case 1:
+                SpawnPlayer();
                 gameState = GameState.Play;
 
                 StartGame();

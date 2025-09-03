@@ -26,6 +26,8 @@ public class PlatformSpawner : MonoBehaviour
     Vector3 lastSpawnPos;
     int basePlatformSpawned = 0;
     public static Action OnPlatformSpawn;
+
+    bool shouldSpawn = true;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -50,7 +52,8 @@ public class PlatformSpawner : MonoBehaviour
         {
             case GameManager.GameState.Mainmenu:
                 PlatformPooling();
-                GameManager.OnGameStarted += CheckSpawnCondition;
+                GameManager.OnGameStarted += SpawnPlatform;
+
                 GameManager.OnGameFinished += PutAllPlatformsBack;
                 break;
             case GameManager.GameState.Play:
@@ -58,13 +61,15 @@ public class PlatformSpawner : MonoBehaviour
                 if (GameManager.Instance.GetScore() % 5 == 0)
                 {
                     PutThePlatformBack();
-                    //CheckSpawnCondition();
+                    CheckSpawnCondition();
                 }
                 break;
             case GameManager.GameState.GameOver:
                 Cleaner();
                 GameManager.OnGameStarted -= SpawnPlatform;
                 GameManager.OnGameFinished -= PutAllPlatformsBack;
+                GameManager.OnGameStarted += SpawnPlatform;
+                GameManager.OnGameFinished += PutAllPlatformsBack;
 
                 break;
             default:
@@ -90,6 +95,7 @@ public class PlatformSpawner : MonoBehaviour
         lastSpawnPos = Vector3.zero;
         platformPoolIndex = 0;
         poolTourCount = 0;
+        shouldSpawn = true;
 
     }
     public void CheckSpawnCondition()
@@ -104,6 +110,7 @@ public class PlatformSpawner : MonoBehaviour
         if (playerGap < 10 * spawnGap)
         {
             Debug.Log("SPAWN CONDİTİON CHECKED!" + playerGap);
+            shouldSpawn = true;
             SpawnPlatform();
         }
     }
@@ -124,6 +131,10 @@ public class PlatformSpawner : MonoBehaviour
     }
     void SpawnPlatform()
     {
+        if (!shouldSpawn)
+        {
+            return;
+        }
         if (basePlatformSpawned == 0)
         {
             basePlatform.transform.position = baseSpawn;
@@ -157,6 +168,7 @@ public class PlatformSpawner : MonoBehaviour
         spawnY += spawnGap;
         platformPoolIndex++;
         Debug.Log("platform pool index : " + platformPoolIndex);
+        shouldSpawn = false;
     }
 
     Vector3 RandomScaleByDifficulty(Transform transform)

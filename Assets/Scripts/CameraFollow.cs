@@ -12,8 +12,6 @@ public class CameraFollow : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
-
         transform.position = new Vector3(cameraX, cameraY, cameraZ);
     }
 
