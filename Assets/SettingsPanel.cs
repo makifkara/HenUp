@@ -8,11 +8,7 @@ public class SettingsPanel : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        // musicVolumeSlider.value = PlayerPrefs.GetFloat("musiclevel");
-        // Debug.Log("INITIAL Music volume set at UIM: " + musicVolumeSlider.value.ToString());
 
-        // sfxVolumeSlider.value = PlayerPrefs.GetFloat("sfxlevel");
-        // Debug.Log("INITIAL SFX volume set at UIM: " + sfxVolumeSlider.value.ToString());
         musicVolumeSlider.value = PlayerPrefs.GetFloat("musiclevel");
         sfxVolumeSlider.value = PlayerPrefs.GetFloat("sfxlevel");
     }
