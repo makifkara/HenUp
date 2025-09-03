@@ -86,7 +86,7 @@ public class GameManager : MonoBehaviour
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
 
-        Debug.Log("OnSceneLoaded: " + scene.name);
+
         switch (scene.buildIndex)
         {
             case 0:
@@ -134,7 +134,7 @@ public class GameManager : MonoBehaviour
     }
     public int GetScore()
     {
-        Debug.Log("Get score: " + playerScore);
+
         return playerScore;
     }
     public float GetHighestY()

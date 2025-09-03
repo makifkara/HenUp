@@ -102,14 +102,14 @@ public class PlatformSpawner : MonoBehaviour
     {
         if (lastSpawned == null)
         {
-            Debug.Log("fakk");
+
             return;
         }
         float playerGap = lastSpawned.transform.position.y - GameManager.Instance.GetPlayerObject().transform.position.y;
-        Debug.Log("---Player Gap : " + playerGap);
+
         if (playerGap < 10 * spawnGap)
         {
-            Debug.Log("SPAWN CONDİTİON CHECKED!" + playerGap);
+
             shouldSpawn = true;
             SpawnPlatform();
         }
@@ -157,17 +157,17 @@ public class PlatformSpawner : MonoBehaviour
         }
         if (platformPool[platformPoolIndex] == null)
         {
-            Debug.Log("Platform Pool is empty or index is out of range!");
+
             return;
         }
         lastSpawned = platformPool[platformPoolIndex];
-        //Debug.Log("LAST SPAWNED POS: " + lastSpawnPos);
+
         lastSpawned.transform.position = spawnPos;
         lastSpawnPos = lastSpawned.transform.position;
         lastSpawned.transform.localScale = RandomScaleByDifficulty(lastSpawned.transform);
         spawnY += spawnGap;
         platformPoolIndex++;
-        Debug.Log("platform pool index : " + platformPoolIndex);
+
         shouldSpawn = false;
     }
 

@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class GameOverUI : MonoBehaviour
 {
@@ -35,7 +36,7 @@ public class GameOverUI : MonoBehaviour
         {
             return;
         }
-        Debug.Log("Score updated on gameoverui");
+
         lastscore = PlayerPrefs.GetInt("lastscore");
         scoreTMP.text = "SCORE: " + lastscore.ToString();
 
@@ -47,4 +48,5 @@ public class GameOverUI : MonoBehaviour
     {
         bestscoreTMP.color = Color.green;
     }
+
 }

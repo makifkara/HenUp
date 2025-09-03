@@ -41,7 +41,7 @@ public class PlayerMovement : MonoBehaviour
 
         CheckIfOutOfScreen();
         moveInput = Input.GetAxisRaw("Horizontal");
-
+        
 
         //if (Input.GetKeyDown(KeyCode.Space))
         jumpPressed = true;

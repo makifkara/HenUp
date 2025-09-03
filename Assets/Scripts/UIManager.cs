@@ -39,18 +39,6 @@ public class UIManager : MonoBehaviour
     public void HandleMovementUI(float input)
     {
 
-        if (playerMovement == null)
-        {
-            playerMovement = FindFirstObjectByType<PlayerMovement>();
-
-            playerMovement.SetMoveInput(input);
-            Debug.Log("Move input: " + input);
-        }
-        else
-        {
-            playerMovement.SetMoveInput(input);
-            Debug.Log("Move input: " + input);
-        }
     }
 
 }
