@@ -41,7 +41,7 @@ public class PlayerMovement : MonoBehaviour
 
         CheckIfOutOfScreen();
         moveInput = Input.GetAxisRaw("Horizontal");
-        
+
 
         //if (Input.GetKeyDown(KeyCode.Space))
         jumpPressed = true;
@@ -65,7 +65,16 @@ public class PlayerMovement : MonoBehaviour
 
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundMask);
 
+        if (moveInput > 0)
+        {
+            transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * 1, transform.localScale.y, transform.localScale.z);
 
+        }
+        if (moveInput < 0)
+        {
+            transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * -1, transform.localScale.y, transform.localScale.z);
+
+        }
         Vector2 v = rb.linearVelocity;
         v.x = moveInput * moveSpeed;
         rb.linearVelocity = v;

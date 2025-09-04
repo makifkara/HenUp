@@ -2241,6 +2241,14 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1396460315616290622, guid: b2361f61ff60b4e82b01429bfb0d8ef5, type: 3}
+      propertyPath: platformWidth.x
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1396460315616290622, guid: b2361f61ff60b4e82b01429bfb0d8ef5, type: 3}
+      propertyPath: platformWidth.y
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1396460315616290622, guid: b2361f61ff60b4e82b01429bfb0d8ef5, type: 3}
       propertyPath: basePlatformPrefab
       value: 
       objectReference: {fileID: 640987367857900481, guid: eeb05b844f60e449396a1a89698012f4, type: 3}
