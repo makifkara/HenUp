@@ -21,6 +21,7 @@ public class PlatformSpawner : MonoBehaviour
     Vector3 poolPos = Vector3.left * 100f;
     int platformPoolIndex = 0;
     float difficultyMultiplier = 1f;
+    [SerializeField] private float minScaleX = 0f;
 
     GameObject lastSpawned;
     Vector3 lastSpawnPos = Vector3.zero;
@@ -179,9 +180,9 @@ public class PlatformSpawner : MonoBehaviour
         float spawnScaleX = Random.Range(platformWidth.x, platformWidth.y);
 
         spawnScaleX *= difficultyMultiplier;
-        if (spawnScaleX < 0.6f)
+        if (spawnScaleX < minScaleX)
         {
-            spawnScaleX = 0.6f;
+            spawnScaleX = minScaleX;
         }
         Vector3 spawnScale = new Vector3(spawnScaleX, lastSpawned.transform.localScale.y, 1f);
 
