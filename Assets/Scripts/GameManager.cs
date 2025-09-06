@@ -9,7 +9,6 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] public float deadZone;
     float highestY = 0f;
-    float deadlyY = -10f;
     Vector3 stayPos;
 
     [SerializeField] private Vector3 startPos;
@@ -66,9 +65,14 @@ public class GameManager : MonoBehaviour
     {
         if (gameState == GameState.Play)
         {
+            if (player != null)
+            {
+                Debug.Log("PLAYER OBJECT EXIST");
+                UpdatePlayerScore();
+                Debug.Log("PLAYER POSITION IS: " + player.transform.position);
+                CheckIfGameOver();
+            }
 
-            UpdatePlayerScore();
-            CheckIfGameOver();
 
         }
         if (Input.GetKeyDown(KeyCode.R))
@@ -104,7 +108,7 @@ public class GameManager : MonoBehaviour
                 break;
             case 2:
                 gameState = GameState.GameOver;
-                OnBestScore?.Invoke();
+                //OnBestScore?.Invoke();
                 OnGameFinished?.Invoke();
                 break;
             case 3:
@@ -117,8 +121,10 @@ public class GameManager : MonoBehaviour
     void Cleaner()
     {
         playerScore = 0;
-        deadlyY = 0;
+
         highestY = 0;
+
+        CameraFollow.Instance.MoveCameraToInitialPosition();
     }
     void StartGame()
     {

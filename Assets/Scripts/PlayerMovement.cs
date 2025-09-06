@@ -98,7 +98,6 @@ public class PlayerMovement : MonoBehaviour
                 {
                     rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
                     Vector2 jumpVector = Vector2.up * jumpForce;
-                    jumpVector = BonusJump(jumpVector);
                     rb.AddForce(jumpVector, ForceMode2D.Impulse);
                     GameManager.Instance.SetHighestY(transform.position.y);
                     AudioManager.Instance.PlaySFX(AudioManager.SFXClip.jump);
@@ -111,7 +110,11 @@ public class PlayerMovement : MonoBehaviour
             coyoteCounter = 0;
         }
     }
-
+    public void PowerItUp(Vector3 powerVector)
+    {
+        Debug.Log("I GOT THE POWER " + powerVector.y);
+        rb.AddForce(powerVector, ForceMode2D.Impulse);
+    }
     public void SetMoveInput(float MoveInput)
     {
         moveInput = MoveInput;
@@ -122,22 +125,6 @@ public class PlayerMovement : MonoBehaviour
         {
             isOutOfScreen = true;
         }
-    }
-    Vector2 BonusJump(Vector2 jumpVector)
-    {
-        /*
-        if (rb.linearVelocity.x == 0f)
-        {
-            bonusJumpCounter++;
-            if (bonusJumpCounter > 2)
-            {
-                jumpVector *= bonusJumpMultiplier;
-                bonusJumpCounter = 0;
-                bonusJumpPS.Play();
-            }
-
-        }*/
-        return jumpVector;
     }
 
     void OnDrawGizmosSelected()

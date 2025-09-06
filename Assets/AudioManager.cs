@@ -16,6 +16,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip diedSFX;
     [SerializeField] private AudioClip buttonClickSFX;
     [SerializeField] private AudioClip bestScoreSFX;
+    [SerializeField] private AudioClip springSFX;
 
     public static AudioManager Instance { get; private set; }
 
@@ -25,6 +26,7 @@ public class AudioManager : MonoBehaviour
         dead,
         click,
         bestscore,
+        spring,
     }
     public enum AudioType
     {
@@ -151,7 +153,9 @@ public class AudioManager : MonoBehaviour
             case SFXClip.bestscore:
                 sFXSource.PlayOneShot(bestScoreSFX);
                 break;
-
+            case SFXClip.spring:
+                sFXSource.PlayOneShot(springSFX);
+                break;
             default:
                 break;
         }

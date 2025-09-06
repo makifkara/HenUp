@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -27,8 +28,9 @@ public class PlatformSpawner : MonoBehaviour
     Vector3 lastSpawnPos = Vector3.zero;
     int basePlatformSpawned = 0;
     public static Action OnPlatformSpawn;
-
-
+    [SerializeField] private float powerUpPlatformRate = 3f;
+    [SerializeField] private List<GameObject> powerUpPrefabs = new List<GameObject>();
+    List<GameObject> powerUps = new List<GameObject>();
     bool shouldSpawn = true;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -63,7 +65,7 @@ public class PlatformSpawner : MonoBehaviour
                 break;
             case GameManager.GameState.Play:
 
-                if (GameManager.Instance.GetScore() % 5 == 0)
+                if ((int)CameraFollow.Instance.GetCameraPosition().y % 5 == 0)
                 {
                     PutThePlatformBack();
                     CheckSpawnCondition();
@@ -105,17 +107,24 @@ public class PlatformSpawner : MonoBehaviour
         if (lastSpawnPos == Vector3.zero)
         {
 
-            return;
+            // return;
         }
 
         //float playerGap = lastSpawnPos.y - GameManager.Instance.GetPlayerObject().transform.position.y;
         float cameraGap = lastSpawnPos.y - CameraFollow.Instance.GetCameraPosition().y;
         if (cameraGap < 10 * spawnGap)
         {
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 40; i++)
             {
                 shouldSpawn = true;
                 SpawnPlatform();
+                if (i % powerUpPlatformRate == 0)
+                {
+                    GameObject powerUpGO;
+                    powerUpGO = Instantiate(powerUpPrefabs[1]);
+                    powerUps.Add(powerUpGO);
+                    powerUpGO.transform.position = new Vector3(lastSpawnPos.x, lastSpawnPos.y + 0.5f, lastSpawnPos.z);
+                }
             }
 
         }

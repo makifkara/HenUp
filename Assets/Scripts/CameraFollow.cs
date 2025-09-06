@@ -41,12 +41,15 @@ public class CameraFollow : MonoBehaviour
         }
 
     }
-    //losing ve plaform spawn-putback işlemleri kameraya göre yapılacak
-    //score da oyuncunun son jump yaptığı andaki pozisyonuna göre olacak. 
+
     //oyun sonunda doodlejump gibi olabilir.
     void FixedUpdate()
     {
 
+    }
+    public void MoveCameraToInitialPosition()
+    {
+        transform.position = new Vector3(0f, 0f, -10f);
     }
     public Vector3 GetCameraPosition()
     {
