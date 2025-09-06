@@ -8,6 +8,7 @@ public class CameraFollow : MonoBehaviour
     float cameraX = 0f;
     float cameraY = 0f;
     float cameraZ = -10f;
+    float cameraMinY = 0f;
     //float cameraSpeed = 1f;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -27,8 +28,15 @@ public class CameraFollow : MonoBehaviour
                 return;
             }
             cameraY = playerTransform.position.y;
+            if (cameraY > cameraMinY)
+            {
+                transform.position = Vector3.Lerp(transform.position, new Vector3(cameraX, cameraY, cameraZ), 2f);
+                cameraMinY = cameraY;
+            }
+
         }
-        transform.position = new Vector3(cameraX, cameraY, cameraZ);
+        //transform.position = new Vector3(cameraX, cameraY, cameraZ);
+
     }
 
     void FixedUpdate()

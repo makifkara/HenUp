@@ -23,7 +23,7 @@ public class PlatformSpawner : MonoBehaviour
     float difficultyMultiplier = 1f;
 
     GameObject lastSpawned;
-    Vector3 lastSpawnPos;
+    Vector3 lastSpawnPos = Vector3.zero;
     int basePlatformSpawned = 0;
     public static Action OnPlatformSpawn;
 
@@ -100,29 +100,32 @@ public class PlatformSpawner : MonoBehaviour
     }
     public void CheckSpawnCondition()
     {
-        if (lastSpawned == null)
+        if (lastSpawnPos == Vector3.zero)
         {
 
             return;
         }
-        float playerGap = lastSpawned.transform.position.y - GameManager.Instance.GetPlayerObject().transform.position.y;
+        float playerGap = lastSpawnPos.y - GameManager.Instance.GetPlayerObject().transform.position.y;
 
         if (playerGap < 10 * spawnGap)
         {
+            for (int i = 0; i < 3; i++)
+            {
+                shouldSpawn = true;
+                SpawnPlatform();
+            }
 
-            shouldSpawn = true;
-            SpawnPlatform();
         }
     }
     public void PutThePlatformBack()
     {
-        if (GameManager.Instance.GetHighestY() - baseSpawn.y >= GameManager.Instance.deadZone / 2f)
+        if (GameManager.Instance.GetHighestY() - baseSpawn.y >= GameManager.Instance.deadZone / (3 / 2))
         {
             basePlatform.transform.position = poolPos;
         }
         foreach (GameObject platform in platformPool)
         {
-            if (GameManager.Instance.GetHighestY() - platform.transform.position.y >= GameManager.Instance.deadZone / 2f)
+            if (GameManager.Instance.GetHighestY() - platform.transform.position.y >= GameManager.Instance.deadZone / (3 / 2f))
             {
                 platform.transform.position = poolPos;
             }
