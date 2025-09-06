@@ -100,6 +100,7 @@ public class PlayerMovement : MonoBehaviour
                     Vector2 jumpVector = Vector2.up * jumpForce;
                     jumpVector = BonusJump(jumpVector);
                     rb.AddForce(jumpVector, ForceMode2D.Impulse);
+                    GameManager.Instance.SetHighestY(transform.position.y);
                     AudioManager.Instance.PlaySFX(AudioManager.SFXClip.jump);
                 }
 

@@ -20,7 +20,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject playerPrefab;
     GameObject player;
     PlatformSpawner platformSpawner;
-    public Camera myCamera;
+
+    [SerializeField] private Camera camPrefab;
+    Camera myCamera;
     public static event Action OnGameStarted;
     public static event Action OnGameFinished;
     public static event Action OnBestScore;
@@ -43,6 +45,7 @@ public class GameManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(this.gameObject);
         SceneManager.sceneLoaded += OnSceneLoaded;
+
 
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -141,15 +144,15 @@ public class GameManager : MonoBehaviour
     {
         return highestY;
     }
+    public void SetHighestY(float value)
+    {
+        highestY = value;
+    }
     void CheckIfGameOver()
     {
         if (player == null)
         { return; }
-        if (player.transform.position.y < deadZone / 3)
-        {
-            //return;
-        }
-        if (player.transform.position.y < deadlyY)
+        if (CameraFollow.Instance.GetCameraPosition().y - player.transform.position.y > deadZone)
         {
             stayPos = player.transform.position;
             GameOver();
@@ -176,13 +179,6 @@ public class GameManager : MonoBehaviour
     }
     void UpdatePlayerScore()
     {
-        float currentY = player.transform.position.y;
-
-        if (highestY < currentY)
-        {
-            highestY = currentY;
-            deadlyY = highestY - deadZone;
-        }
         playerScore = (int)highestY;
     }
 

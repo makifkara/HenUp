@@ -6,7 +6,7 @@ using Random = UnityEngine.Random;
 public class PlatformSpawner : MonoBehaviour
 {
     [SerializeField] private GameObject platformPrefab;
-    GameObject player;
+    //GameObject player;
     [SerializeField] private GameObject basePlatformPrefab;
     GameObject basePlatform;
     [SerializeField] private Vector3 baseSpawn;
@@ -27,6 +27,7 @@ public class PlatformSpawner : MonoBehaviour
     Vector3 lastSpawnPos = Vector3.zero;
     int basePlatformSpawned = 0;
     public static Action OnPlatformSpawn;
+
 
     bool shouldSpawn = true;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -106,9 +107,10 @@ public class PlatformSpawner : MonoBehaviour
 
             return;
         }
-        float playerGap = lastSpawnPos.y - GameManager.Instance.GetPlayerObject().transform.position.y;
 
-        if (playerGap < 10 * spawnGap)
+        //float playerGap = lastSpawnPos.y - GameManager.Instance.GetPlayerObject().transform.position.y;
+        float cameraGap = lastSpawnPos.y - CameraFollow.Instance.GetCameraPosition().y;
+        if (cameraGap < 10 * spawnGap)
         {
             for (int i = 0; i < 3; i++)
             {
@@ -120,13 +122,13 @@ public class PlatformSpawner : MonoBehaviour
     }
     public void PutThePlatformBack()
     {
-        if (GameManager.Instance.GetHighestY() - baseSpawn.y >= GameManager.Instance.deadZone / (3 / 2))
+        if (CameraFollow.Instance.GetCameraPosition().y - baseSpawn.y >= GameManager.Instance.deadZone * 1.5)
         {
             basePlatform.transform.position = poolPos;
         }
         foreach (GameObject platform in platformPool)
         {
-            if (GameManager.Instance.GetHighestY() - platform.transform.position.y >= GameManager.Instance.deadZone / (3 / 2f))
+            if (CameraFollow.Instance.GetCameraPosition().y - platform.transform.position.y >= GameManager.Instance.deadZone * 1.5)
             {
                 platform.transform.position = poolPos;
             }
@@ -146,7 +148,7 @@ public class PlatformSpawner : MonoBehaviour
             spawnY = firstSpawnY;
             OnPlatformSpawn?.Invoke();
             lastSpawned = basePlatform;
-            player = GameManager.Instance.GetPlayerObject();
+            //player = GameManager.Instance.GetPlayerObject();
             basePlatformSpawned = 1;
 
         }

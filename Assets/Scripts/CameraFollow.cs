@@ -9,11 +9,25 @@ public class CameraFollow : MonoBehaviour
     float cameraY = 0f;
     float cameraZ = -10f;
     float cameraMinY = 0f;
-    //float cameraSpeed = 1f;
+    [SerializeField] private float cameraSpeed = 1f;
+    Rigidbody2D rb;
+    public static CameraFollow Instance;
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(this.gameObject);
+
+    }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         transform.position = new Vector3(cameraX, cameraY, cameraZ);
+        TryGetComponent<Rigidbody2D>(out rb);
     }
 
     // Update is called once per frame
@@ -22,25 +36,41 @@ public class CameraFollow : MonoBehaviour
 
         if (GameManager.Instance.GetGameState() == GameManager.GameState.Play)
         {
-            playerTransform = GameManager.Instance.GetPlayerObject().GetComponent<Transform>();
-            if (playerTransform == null)
-            {
-                return;
-            }
-            cameraY = playerTransform.position.y;
-            if (cameraY > cameraMinY)
-            {
-                transform.position = Vector3.Lerp(transform.position, new Vector3(cameraX, cameraY, cameraZ), 2f);
-                cameraMinY = cameraY;
-            }
+            MoveCamera();
 
         }
-        //transform.position = new Vector3(cameraX, cameraY, cameraZ);
 
     }
-
+    //losing ve plaform spawn-putback işlemleri kameraya göre yapılacak
+    //score da oyuncunun son jump yaptığı andaki pozisyonuna göre olacak. 
+    //oyun sonunda doodlejump gibi olabilir.
     void FixedUpdate()
     {
 
+    }
+    public Vector3 GetCameraPosition()
+    {
+        return transform.position;
+    }
+    void MoveCamera()
+    {
+        playerTransform = GameManager.Instance.GetPlayerObject().GetComponent<Transform>();
+        if (playerTransform == null)
+        {
+            return;
+        }
+        //move camera to next posit. if player pos > next pos => go to player position
+        cameraY = playerTransform.position.y;
+        if (cameraY > cameraMinY)
+        {
+            //transform.position = Vector3.Lerp(transform.position, new Vector3(cameraX, cameraY, cameraZ), 0.2f);
+            transform.position = new Vector3(cameraX, cameraY, cameraZ);
+
+        }
+        Vector2 v = rb.linearVelocity;
+        v.y = cameraSpeed;
+        rb.linearVelocity = v;
+        rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
+        cameraMinY = transform.position.y;
     }
 }
