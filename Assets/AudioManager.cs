@@ -1,6 +1,8 @@
 using Unity.VisualScripting;
 using UnityEngine;
-
+using System;
+using System.Collections.Generic;
+using Random = UnityEngine.Random;
 public class AudioManager : MonoBehaviour
 {
     bool isMuted = false;
@@ -12,9 +14,9 @@ public class AudioManager : MonoBehaviour
     [Header("SFX")]
     [SerializeField] private AudioSource sFXSource;
     [SerializeField] private float sfxLevel;
-    [SerializeField] private AudioClip jumpSFX;
+    [SerializeField] private List<AudioClip> jumpSFX = new List<AudioClip>();
     [SerializeField] private AudioClip diedSFX;
-    [SerializeField] private AudioClip buttonClickSFX;
+    [SerializeField] private List<AudioClip> buttonClickSFX = new List<AudioClip>();
     [SerializeField] private AudioClip bestScoreSFX;
     [SerializeField] private AudioClip springSFX;
 
@@ -136,19 +138,24 @@ public class AudioManager : MonoBehaviour
         }
 
     }
+    AudioClip SelectRandomClip(List<AudioClip> clips)
+    {
+        int index = Random.Range(0, clips.Count - 1);
+        return clips[index];
+    }
     public void PlaySFX(SFXClip sFXClip)
     {
         switch (sFXClip)
         {
             case SFXClip.jump:
 
-                sFXSource.PlayOneShot(jumpSFX);
+                sFXSource.PlayOneShot(SelectRandomClip(jumpSFX));
                 break;
             case SFXClip.dead:
                 sFXSource.PlayOneShot(diedSFX);
                 break;
             case SFXClip.click:
-                sFXSource.PlayOneShot(buttonClickSFX);
+                sFXSource.PlayOneShot(SelectRandomClip(buttonClickSFX));
                 break;
             case SFXClip.bestscore:
                 sFXSource.PlayOneShot(bestScoreSFX);

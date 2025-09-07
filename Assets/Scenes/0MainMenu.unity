@@ -2429,7 +2429,7 @@ PrefabInstance:
     - target: {fileID: 4430129556906058983, guid: 63bceb4baac6e4867959fc8b247d60f6, type: 3}
       propertyPath: bgmLoop
       value: 
-      objectReference: {fileID: 8300000, guid: 858ee3ecfe2b840429cf752174c17e24, type: 3}
+      objectReference: {fileID: 8300000, guid: 827f1fc588eba49f284fcb499075c4e8, type: 3}
     - target: {fileID: 4430129556906058983, guid: 63bceb4baac6e4867959fc8b247d60f6, type: 3}
       propertyPath: jumpSFX
       value: 
@@ -2438,6 +2438,38 @@ PrefabInstance:
       propertyPath: springSFX
       value: 
       objectReference: {fileID: 8300000, guid: 7e433d6616c824ecaa1db23aefddbb4b, type: 3}
+    - target: {fileID: 4430129556906058983, guid: 63bceb4baac6e4867959fc8b247d60f6, type: 3}
+      propertyPath: jumpSFX.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4430129556906058983, guid: 63bceb4baac6e4867959fc8b247d60f6, type: 3}
+      propertyPath: 'jumpSFX.Array.data[0]'
+      value: 
+      objectReference: {fileID: 8300000, guid: d13b15e82205248a8a17016ba2253900, type: 3}
+    - target: {fileID: 4430129556906058983, guid: 63bceb4baac6e4867959fc8b247d60f6, type: 3}
+      propertyPath: 'jumpSFX.Array.data[1]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 0a2e102ce72d649a3906a313d432eccf, type: 3}
+    - target: {fileID: 4430129556906058983, guid: 63bceb4baac6e4867959fc8b247d60f6, type: 3}
+      propertyPath: 'jumpSFX.Array.data[2]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 88b14b22b38244c4eac08d0736998053, type: 3}
+    - target: {fileID: 4430129556906058983, guid: 63bceb4baac6e4867959fc8b247d60f6, type: 3}
+      propertyPath: 'jumpSFX.Array.data[3]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 32790bd28c0494915bc784f9bbf28512, type: 3}
+    - target: {fileID: 4430129556906058983, guid: 63bceb4baac6e4867959fc8b247d60f6, type: 3}
+      propertyPath: buttonClickSFX.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4430129556906058983, guid: 63bceb4baac6e4867959fc8b247d60f6, type: 3}
+      propertyPath: 'buttonClickSFX.Array.data[0]'
+      value: 
+      objectReference: {fileID: 8300000, guid: a75a4d2645e5444a99c99460766cff0c, type: 3}
+    - target: {fileID: 4430129556906058983, guid: 63bceb4baac6e4867959fc8b247d60f6, type: 3}
+      propertyPath: 'buttonClickSFX.Array.data[1]'
+      value: 
+      objectReference: {fileID: 8300000, guid: a6692446ad5484aa8a9bb0a9b6a71006, type: 3}
     - target: {fileID: 8030175536475431422, guid: 63bceb4baac6e4867959fc8b247d60f6, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
