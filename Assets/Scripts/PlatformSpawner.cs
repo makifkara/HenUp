@@ -121,7 +121,8 @@ public class PlatformSpawner : MonoBehaviour
                 if (i % powerUpPlatformRate == 0)
                 {
                     GameObject powerUpGO;
-                    powerUpGO = Instantiate(powerUpPrefabs[1]);
+                    int random = Random.Range(0, powerUpPrefabs.Count);
+                    powerUpGO = Instantiate(powerUpPrefabs[random]);
                     powerUps.Add(powerUpGO);
                     powerUpGO.transform.position = new Vector3(lastSpawnPos.x, lastSpawnPos.y + 0.5f, lastSpawnPos.z);
                 }

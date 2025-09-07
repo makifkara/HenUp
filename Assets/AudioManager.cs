@@ -10,6 +10,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioSource musicSource;
     [SerializeField] private AudioClip bgmLoop;
     [SerializeField] private float musicLevel;
+    [SerializeField] private float pitchRate = 1;
 
     [Header("SFX")]
     [SerializeField] private AudioSource sFXSource;
@@ -44,23 +45,10 @@ public class AudioManager : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(this.gameObject);
-
-
     }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        //Default Settings
         SetDefaultAudioSettings();
-
-
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
     public void SetDefaultAudioSettings()
     {
@@ -78,40 +66,29 @@ public class AudioManager : MonoBehaviour
         }
         isMuted = PlayerPrefs.GetInt("isMuted") > 0;
         musicLevel = PlayerPrefs.GetFloat("musiclevel");
-
         musicSource.volume = musicLevel;
         musicSource.clip = bgmLoop;
+        musicSource.pitch = pitchRate;
         musicSource.Play();
-
         sfxLevel = PlayerPrefs.GetFloat("sfxlevel");
-
         sFXSource.volume = sfxLevel;
     }
     public void MuteUnmute()
     {
         if (!isMuted)
         {
-            /*
-            SetVolume(AudioType.music, 0f);
-            SetVolume(AudioType.sfx, 0f);
-            */
             musicSource.volume = 0f;
             sFXSource.volume = 0f;
             PlayerPrefs.SetInt("isMuted", 1);
             PlayerPrefs.Save();
             isMuted = true;
-            Debug.Log(isMuted);
         }
         else if (isMuted)
         {
-            //SetVolume(AudioType.music, PlayerPrefs.GetFloat("musiclevel"));
-            //SetVolume(AudioType.sfx, PlayerPrefs.GetFloat("sfxlevel"));
             PlayerPrefs.SetInt("isMuted", 0);
-            //SetDefaultAudioSettings();
-
             PlayerPrefs.Save();
             isMuted = false;
-            Debug.Log(isMuted);
+
         }
 
     }
@@ -121,14 +98,14 @@ public class AudioManager : MonoBehaviour
         {
             case AudioType.music:
                 PlayerPrefs.SetFloat("musiclevel", volume);
-                Debug.Log("Music volume set at AM: " + volume.ToString());
+
                 PlayerPrefs.Save();
                 musicLevel = PlayerPrefs.GetFloat("musiclevel");
                 musicSource.volume = musicLevel;
                 break;
             case AudioType.sfx:
                 PlayerPrefs.SetFloat("sfxlevel", volume);
-                Debug.Log("SFX volume set at AM: " + volume.ToString());
+
                 PlayerPrefs.Save();
                 sfxLevel = PlayerPrefs.GetFloat("sfxlevel");
                 sFXSource.volume = sfxLevel;
@@ -136,7 +113,6 @@ public class AudioManager : MonoBehaviour
             default:
                 break;
         }
-
     }
     AudioClip SelectRandomClip(List<AudioClip> clips)
     {

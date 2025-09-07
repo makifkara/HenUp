@@ -23,17 +23,19 @@ public class PlayerMovement : MonoBehaviour
 
     float coyoteCounter;
     [SerializeField] private float coyoteTime = 0.15f;
-    int bonusJumpCounter;
     [SerializeField] private float xSpeedBonusLimit;
     //[SerializeField] private float bonusJumpMultiplier = 1.25f;
-    [SerializeField] private ParticleSystem bonusJumpPS;
+    [SerializeField] private ParticleSystem superSpeedPS;
+    [SerializeField] private float superSpeedLimit;
     bool isGrounded;
 
     [SerializeField] private float screenLimit;
     bool isOutOfScreen = false;
+    int psCounter = 0;
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+
     }
 
     void Update()
@@ -41,7 +43,16 @@ public class PlayerMovement : MonoBehaviour
 
         CheckIfOutOfScreen();
         moveInput = Input.GetAxisRaw("Horizontal");
-
+        if (rb.linearVelocityY > superSpeedLimit && psCounter == 0)
+        {
+            superSpeedPS.Play();
+            psCounter = 1;
+        }
+        else if (rb.linearVelocityY <= superSpeedLimit && psCounter != 0)
+        {
+            superSpeedPS.Stop();
+            psCounter = 0;
+        }
 
         //if (Input.GetKeyDown(KeyCode.Space))
         jumpPressed = true;
@@ -112,7 +123,7 @@ public class PlayerMovement : MonoBehaviour
     }
     public void PowerItUp(Vector3 powerVector)
     {
-        Debug.Log("I GOT THE POWER " + powerVector.y);
+
         rb.AddForce(powerVector, ForceMode2D.Impulse);
     }
     public void SetMoveInput(float MoveInput)

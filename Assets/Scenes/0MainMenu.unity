@@ -688,6 +688,10 @@ PrefabInstance:
       propertyPath: m_Antialiasing
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7525297197188631510, guid: 1fa704947bb6c4431891b9c893bd6b3b, type: 3}
+      propertyPath: cameraSpeed
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8462660893553415068, guid: 1fa704947bb6c4431891b9c893bd6b3b, type: 3}
       propertyPath: m_ClearFlags
       value: 4
@@ -2343,7 +2347,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1396460315616290622, guid: b2361f61ff60b4e82b01429bfb0d8ef5, type: 3}
       propertyPath: powerUpPrefabs.Array.size
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1396460315616290622, guid: b2361f61ff60b4e82b01429bfb0d8ef5, type: 3}
       propertyPath: 'powerUpPrefabs.Array.data[0]'
@@ -2352,18 +2356,18 @@ PrefabInstance:
     - target: {fileID: 1396460315616290622, guid: b2361f61ff60b4e82b01429bfb0d8ef5, type: 3}
       propertyPath: 'powerUpPrefabs.Array.data[1]'
       value: 
-      objectReference: {fileID: 2920158759779185198, guid: 4bcfb705a26ed4f5ca3a4d1dd716c9f7, type: 3}
+      objectReference: {fileID: 2920158759779185198, guid: daf09744d1c084dca992a2780e2598e4, type: 3}
     - target: {fileID: 1396460315616290622, guid: b2361f61ff60b4e82b01429bfb0d8ef5, type: 3}
       propertyPath: 'powerUpPrefabs.Array.data[2]'
       value: 
-      objectReference: {fileID: 2920158759779185198, guid: 4bcfb705a26ed4f5ca3a4d1dd716c9f7, type: 3}
+      objectReference: {fileID: 2920158759779185198, guid: daf09744d1c084dca992a2780e2598e4, type: 3}
     - target: {fileID: 2620258746977397852, guid: b2361f61ff60b4e82b01429bfb0d8ef5, type: 3}
       propertyPath: m_Name
       value: GameManager
       objectReference: {fileID: 0}
     - target: {fileID: 4927650887208432174, guid: b2361f61ff60b4e82b01429bfb0d8ef5, type: 3}
       propertyPath: deadZone
-      value: 9.5
+      value: 9.4
       objectReference: {fileID: 0}
     - target: {fileID: 4927650887208432174, guid: b2361f61ff60b4e82b01429bfb0d8ef5, type: 3}
       propertyPath: myCamera
@@ -2429,11 +2433,15 @@ PrefabInstance:
     - target: {fileID: 4430129556906058983, guid: 63bceb4baac6e4867959fc8b247d60f6, type: 3}
       propertyPath: bgmLoop
       value: 
-      objectReference: {fileID: 8300000, guid: 827f1fc588eba49f284fcb499075c4e8, type: 3}
+      objectReference: {fileID: 8300000, guid: 7182e641951ef4d15b655adcb4d872ae, type: 3}
     - target: {fileID: 4430129556906058983, guid: 63bceb4baac6e4867959fc8b247d60f6, type: 3}
       propertyPath: jumpSFX
       value: 
       objectReference: {fileID: 8300000, guid: a1f6438cbbb244593a386d181b0108e5, type: 3}
+    - target: {fileID: 4430129556906058983, guid: 63bceb4baac6e4867959fc8b247d60f6, type: 3}
+      propertyPath: pitchRate
+      value: 1.1702127
+      objectReference: {fileID: 0}
     - target: {fileID: 4430129556906058983, guid: 63bceb4baac6e4867959fc8b247d60f6, type: 3}
       propertyPath: springSFX
       value: 

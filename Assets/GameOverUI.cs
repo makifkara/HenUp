@@ -15,13 +15,13 @@ public class GameOverUI : MonoBehaviour
     {
         bestscoreTMP.color = Color.white;
         GameManager.OnGameFinished += UpdateScores;
-        GameManager.OnBestScore += GotBestScore;
+
         counter = 0;
     }
     void OnDestroy()
     {
         GameManager.OnGameFinished -= UpdateScores;
-        GameManager.OnBestScore -= GotBestScore;
+
     }
     private void Update()
     {

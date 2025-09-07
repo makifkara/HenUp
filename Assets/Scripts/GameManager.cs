@@ -20,11 +20,9 @@ public class GameManager : MonoBehaviour
     GameObject player;
     PlatformSpawner platformSpawner;
 
-    [SerializeField] private Camera camPrefab;
-    Camera myCamera;
     public static event Action OnGameStarted;
     public static event Action OnGameFinished;
-    public static event Action OnBestScore;
+
     GameState gameState;
     public enum GameState
     {
@@ -67,9 +65,9 @@ public class GameManager : MonoBehaviour
         {
             if (player != null)
             {
-                Debug.Log("PLAYER OBJECT EXIST");
+
                 UpdatePlayerScore();
-                Debug.Log("PLAYER POSITION IS: " + player.transform.position);
+
                 CheckIfGameOver();
             }
 
