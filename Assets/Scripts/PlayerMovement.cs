@@ -32,6 +32,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float screenLimit;
     bool isOutOfScreen = false;
     int psCounter = 0;
+    bool canJump = true;
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -74,8 +75,8 @@ public class PlayerMovement : MonoBehaviour
             isOutOfScreen = false;
         }
 
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundMask);
-
+        //isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundMask);
+        //isGrounded = canJump;
         if (moveInput > 0)
         {
             transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * 1, transform.localScale.y, transform.localScale.z);
@@ -137,7 +138,20 @@ public class PlayerMovement : MonoBehaviour
             isOutOfScreen = true;
         }
     }
-
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Platform"))
+        {
+            isGrounded = true;
+        }
+    }
+    void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Platform"))
+        {
+            isGrounded = true;
+        }
+    }
     void OnDrawGizmosSelected()
     {
         if (groundCheck == null) return;

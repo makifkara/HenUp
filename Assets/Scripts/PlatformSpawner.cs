@@ -7,7 +7,8 @@ using Random = UnityEngine.Random;
 public class PlatformSpawner : MonoBehaviour
 {
     [SerializeField] private GameObject platformPrefab;
-    //GameObject player;
+    [SerializeField] private GameObject singlePlatformPrefab;
+
     [SerializeField] private GameObject basePlatformPrefab;
     GameObject basePlatform;
     [SerializeField] private Vector3 baseSpawn;
@@ -145,6 +146,10 @@ public class PlatformSpawner : MonoBehaviour
         }
 
     }
+    public void PutThisPlatformBack(GameObject platform)
+    {
+        platform.transform.position = poolPos;
+    }
     void SpawnPlatform()
     {
         if (!shouldSpawn)
@@ -212,7 +217,12 @@ public class PlatformSpawner : MonoBehaviour
         basePlatformSpawned = 0;
         for (int i = 0; i < poolCount; i++)
         {
-            var go = Instantiate(platformPrefab, transform);
+            GameObject go;
+            if (i % 5 == 0)
+            {
+                go = Instantiate(singlePlatformPrefab, transform);
+            }
+            else { go = Instantiate(platformPrefab, transform); }
             go.transform.position = poolPos;
             platformPool.Add(go);
         }

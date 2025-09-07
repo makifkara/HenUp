@@ -2346,8 +2346,12 @@ PrefabInstance:
       value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 1396460315616290622, guid: b2361f61ff60b4e82b01429bfb0d8ef5, type: 3}
+      propertyPath: singlePlatformPrefab
+      value: 
+      objectReference: {fileID: 4198856217044564005, guid: 034c491b807264a2b8c2b27f8c1db09a, type: 3}
+    - target: {fileID: 1396460315616290622, guid: b2361f61ff60b4e82b01429bfb0d8ef5, type: 3}
       propertyPath: powerUpPrefabs.Array.size
-      value: 2
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1396460315616290622, guid: b2361f61ff60b4e82b01429bfb0d8ef5, type: 3}
       propertyPath: 'powerUpPrefabs.Array.data[0]'
@@ -2360,7 +2364,15 @@ PrefabInstance:
     - target: {fileID: 1396460315616290622, guid: b2361f61ff60b4e82b01429bfb0d8ef5, type: 3}
       propertyPath: 'powerUpPrefabs.Array.data[2]'
       value: 
-      objectReference: {fileID: 2920158759779185198, guid: daf09744d1c084dca992a2780e2598e4, type: 3}
+      objectReference: {fileID: 2920158759779185198, guid: 4bcfb705a26ed4f5ca3a4d1dd716c9f7, type: 3}
+    - target: {fileID: 1396460315616290622, guid: b2361f61ff60b4e82b01429bfb0d8ef5, type: 3}
+      propertyPath: 'powerUpPrefabs.Array.data[3]'
+      value: 
+      objectReference: {fileID: 2920158759779185198, guid: 4bcfb705a26ed4f5ca3a4d1dd716c9f7, type: 3}
+    - target: {fileID: 1396460315616290622, guid: b2361f61ff60b4e82b01429bfb0d8ef5, type: 3}
+      propertyPath: 'powerUpPrefabs.Array.data[4]'
+      value: 
+      objectReference: {fileID: 2920158759779185198, guid: 4bcfb705a26ed4f5ca3a4d1dd716c9f7, type: 3}
     - target: {fileID: 2620258746977397852, guid: b2361f61ff60b4e82b01429bfb0d8ef5, type: 3}
       propertyPath: m_Name
       value: GameManager
