@@ -33,6 +33,8 @@ public class PlayerMovement : MonoBehaviour
     bool isOutOfScreen = false;
     int psCounter = 0;
     bool canJump = true;
+    RaycastHit2D hit2D;
+    SinglePlatform sp;
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -61,22 +63,75 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (isOutOfScreen)
-        {
-            if (transform.position.x < 0)
-            {
-                transform.position = new Vector3(-1f * (transform.position.x + 0.2f), transform.position.y, transform.position.z);
-            }
-            else if (transform.position.x > 0)
-            {
-                transform.position = new Vector3(-1f * (transform.position.x - 0.2f), transform.position.y, transform.position.z);
-            }
+        ScreenWrap();
 
-            isOutOfScreen = false;
-        }
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundMask);
 
-        //isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundMask);
+
         //isGrounded = canJump;
+        MoveHorizontally();
+        //rb.AddForce(Vector2.right * moveInput * moveSpeed, ForceMode2D.Force);
+        CoyoteTime();
+        Jump();
+
+    }
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawLine(hit2D.point, groundCheck.transform.position);
+    }
+    private void Jump()
+    {
+        if (jumpPressed)
+        {
+            if (coyoteCounter > 0)
+            {
+                if (rb.linearVelocityY <= 0)
+                {
+                    RaycastHit2D hit = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckRadius * 1.2f, groundMask);
+                    if (hit.collider != null)
+                    {
+                        Debug.DrawRay(transform.position, Vector2.down * groundCheckRadius * 1.2f, Color.green);
+
+                        hit.collider.gameObject.TryGetComponent<SinglePlatform>(out sp);
+
+                    }
+                    rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
+                    Vector2 jumpVector = Vector2.up * jumpForce;
+                    rb.AddForce(jumpVector, ForceMode2D.Impulse);
+                    GameManager.Instance.SetHighestY(transform.position.y);
+                    AudioManager.Instance.PlaySFX(AudioManager.SFXClip.jump);
+                    if (sp != null && !sp.IsUsed())
+                    {
+                        sp.UsedIt();
+                        Debug.Log("thıs is : " + hit.collider.gameObject.name + " ");
+                        sp = null;
+                    }
+                }
+
+
+            }
+
+            jumpPressed = false;
+            coyoteCounter = 0;
+        }
+    }
+
+    private void CoyoteTime()
+    {
+        if (isGrounded)
+        {
+            coyoteCounter = coyoteTime;
+        }
+        else
+        {
+            coyoteCounter -= Time.deltaTime;
+
+        }
+    }
+
+    private void MoveHorizontally()
+    {
         if (moveInput > 0)
         {
             transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * 1, transform.localScale.y, transform.localScale.z);
@@ -90,36 +145,22 @@ public class PlayerMovement : MonoBehaviour
         Vector2 v = rb.linearVelocity;
         v.x = moveInput * moveSpeed;
         rb.linearVelocity = v;
+    }
 
-        //rb.AddForce(Vector2.right * moveInput * moveSpeed, ForceMode2D.Force);
-        if (isGrounded)
+    public void ScreenWrap()
+    {
+        if (isOutOfScreen)
         {
-            coyoteCounter = coyoteTime;
-        }
-        else
-        {
-            coyoteCounter -= Time.deltaTime;
-
-        }
-
-        if (jumpPressed)
-        {
-            if (coyoteCounter > 0)
+            if (transform.position.x < 0)
             {
-                if (rb.linearVelocityY <= 0)
-                {
-                    rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
-                    Vector2 jumpVector = Vector2.up * jumpForce;
-                    rb.AddForce(jumpVector, ForceMode2D.Impulse);
-                    GameManager.Instance.SetHighestY(transform.position.y);
-                    AudioManager.Instance.PlaySFX(AudioManager.SFXClip.jump);
-                }
-
-
+                transform.position = new Vector3(-1f * (transform.position.x + 0.2f), transform.position.y, transform.position.z);
+            }
+            else if (transform.position.x > 0)
+            {
+                transform.position = new Vector3(-1f * (transform.position.x - 0.2f), transform.position.y, transform.position.z);
             }
 
-            jumpPressed = false;
-            coyoteCounter = 0;
+            isOutOfScreen = false;
         }
     }
     public void PowerItUp(Vector3 powerVector)
@@ -138,20 +179,7 @@ public class PlayerMovement : MonoBehaviour
             isOutOfScreen = true;
         }
     }
-    void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Platform"))
-        {
-            isGrounded = true;
-        }
-    }
-    void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Platform"))
-        {
-            isGrounded = true;
-        }
-    }
+
     void OnDrawGizmosSelected()
     {
         if (groundCheck == null) return;
