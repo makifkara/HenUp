@@ -14,6 +14,7 @@ public class PlayerMovement : MonoBehaviour
     public LayerMask groundMask;
     public Transform groundCheck;
     public float groundCheckRadius = 0.15f;
+    public Vector2 groundCheckSize;
 
     Rigidbody2D rb;
 
@@ -35,6 +36,7 @@ public class PlayerMovement : MonoBehaviour
     bool canJump = true;
     RaycastHit2D hit2D;
     SinglePlatform sp;
+    public float angle;
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -65,7 +67,7 @@ public class PlayerMovement : MonoBehaviour
     {
         ScreenWrap();
 
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundMask);
+        isGrounded = Physics2D.OverlapBox(groundCheck.position, groundCheckSize, angle, groundMask);
 
 
         //isGrounded = canJump;
@@ -78,7 +80,7 @@ public class PlayerMovement : MonoBehaviour
     void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(hit2D.point, groundCheck.transform.position);
+        Gizmos.DrawCube(groundCheck.position, groundCheckSize * 1.01f);
     }
     private void Jump()
     {
@@ -88,12 +90,11 @@ public class PlayerMovement : MonoBehaviour
             {
                 if (rb.linearVelocityY <= 0)
                 {
-                    RaycastHit2D hit = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckRadius * 1.2f, groundMask);
-                    if (hit.collider != null)
+                    Collider2D hit = Physics2D.OverlapBox(groundCheck.position, groundCheckSize * 1.1f, angle, groundMask);
+                    if (hit != null)
                     {
-                        Debug.DrawRay(transform.position, Vector2.down * groundCheckRadius * 1.2f, Color.green);
 
-                        hit.collider.gameObject.TryGetComponent<SinglePlatform>(out sp);
+                        hit.gameObject.TryGetComponent<SinglePlatform>(out sp);
 
                     }
                     rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
@@ -104,7 +105,7 @@ public class PlayerMovement : MonoBehaviour
                     if (sp != null && !sp.IsUsed())
                     {
                         sp.UsedIt();
-                        Debug.Log("thıs is : " + hit.collider.gameObject.name + " ");
+                        Debug.Log("thıs is : " + hit.gameObject.name + " ");
                         sp = null;
                     }
                 }
