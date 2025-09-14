@@ -9,7 +9,6 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] public float deadZone;
     float highestY = 0f;
-    float deadlyY = -10f;
     Vector3 stayPos;
 
     [SerializeField] private Vector3 startPos;
@@ -20,10 +19,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject playerPrefab;
     GameObject player;
     PlatformSpawner platformSpawner;
-    public Camera myCamera;
+
     public static event Action OnGameStarted;
     public static event Action OnGameFinished;
-    public static event Action OnBestScore;
+
     GameState gameState;
     public enum GameState
     {
@@ -44,6 +43,7 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
         SceneManager.sceneLoaded += OnSceneLoaded;
 
+
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -63,9 +63,14 @@ public class GameManager : MonoBehaviour
     {
         if (gameState == GameState.Play)
         {
+            if (player != null)
+            {
 
-            UpdatePlayerScore();
-            CheckIfGameOver();
+                UpdatePlayerScore();
+
+                CheckIfGameOver();
+            }
+
 
         }
         if (Input.GetKeyDown(KeyCode.R))
@@ -101,7 +106,7 @@ public class GameManager : MonoBehaviour
                 break;
             case 2:
                 gameState = GameState.GameOver;
-                OnBestScore?.Invoke();
+                //OnBestScore?.Invoke();
                 OnGameFinished?.Invoke();
                 break;
             case 3:
@@ -114,8 +119,10 @@ public class GameManager : MonoBehaviour
     void Cleaner()
     {
         playerScore = 0;
-        deadlyY = 0;
+
         highestY = 0;
+
+        CameraFollow.Instance.MoveCameraToInitialPosition();
     }
     void StartGame()
     {
@@ -141,15 +148,15 @@ public class GameManager : MonoBehaviour
     {
         return highestY;
     }
+    public void SetHighestY(float value)
+    {
+        highestY = value;
+    }
     void CheckIfGameOver()
     {
         if (player == null)
         { return; }
-        if (player.transform.position.y < deadZone / 3)
-        {
-            //return;
-        }
-        if (player.transform.position.y < deadlyY)
+        if (CameraFollow.Instance.GetCameraPosition().y - player.transform.position.y > deadZone)
         {
             stayPos = player.transform.position;
             GameOver();
@@ -176,13 +183,6 @@ public class GameManager : MonoBehaviour
     }
     void UpdatePlayerScore()
     {
-        float currentY = player.transform.position.y;
-
-        if (highestY < currentY)
-        {
-            highestY = currentY;
-            deadlyY = highestY - deadZone;
-        }
         playerScore = (int)highestY;
     }
 

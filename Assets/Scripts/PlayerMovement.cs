@@ -23,17 +23,22 @@ public class PlayerMovement : MonoBehaviour
 
     float coyoteCounter;
     [SerializeField] private float coyoteTime = 0.15f;
-    int bonusJumpCounter;
     [SerializeField] private float xSpeedBonusLimit;
     //[SerializeField] private float bonusJumpMultiplier = 1.25f;
-    [SerializeField] private ParticleSystem bonusJumpPS;
+    [SerializeField] private ParticleSystem superSpeedPS;
+    [SerializeField] private float superSpeedLimit;
     bool isGrounded;
 
     [SerializeField] private float screenLimit;
     bool isOutOfScreen = false;
+    int psCounter = 0;
+    bool canJump = true;
+    RaycastHit2D hit2D;
+    SinglePlatform sp;
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+
     }
 
     void Update()
@@ -41,13 +46,108 @@ public class PlayerMovement : MonoBehaviour
 
         CheckIfOutOfScreen();
         moveInput = Input.GetAxisRaw("Horizontal");
-        
+        if (rb.linearVelocityY > superSpeedLimit && psCounter == 0)
+        {
+            superSpeedPS.Play();
+            psCounter = 1;
+        }
+        else if (rb.linearVelocityY <= superSpeedLimit && psCounter != 0)
+        {
+            superSpeedPS.Stop();
+            psCounter = 0;
+        }
 
         //if (Input.GetKeyDown(KeyCode.Space))
         jumpPressed = true;
     }
 
     void FixedUpdate()
+    {
+        ScreenWrap();
+
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundMask);
+
+
+        //isGrounded = canJump;
+        MoveHorizontally();
+        //rb.AddForce(Vector2.right * moveInput * moveSpeed, ForceMode2D.Force);
+        CoyoteTime();
+        Jump();
+
+    }
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawLine(hit2D.point, groundCheck.transform.position);
+    }
+    private void Jump()
+    {
+        if (jumpPressed)
+        {
+            if (coyoteCounter > 0)
+            {
+                if (rb.linearVelocityY <= 0)
+                {
+                    RaycastHit2D hit = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckRadius * 1.2f, groundMask);
+                    if (hit.collider != null)
+                    {
+                        Debug.DrawRay(transform.position, Vector2.down * groundCheckRadius * 1.2f, Color.green);
+
+                        hit.collider.gameObject.TryGetComponent<SinglePlatform>(out sp);
+
+                    }
+                    rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
+                    Vector2 jumpVector = Vector2.up * jumpForce;
+                    rb.AddForce(jumpVector, ForceMode2D.Impulse);
+                    GameManager.Instance.SetHighestY(transform.position.y);
+                    AudioManager.Instance.PlaySFX(AudioManager.SFXClip.jump);
+                    if (sp != null && !sp.IsUsed())
+                    {
+                        sp.UsedIt();
+                        Debug.Log("thıs is : " + hit.collider.gameObject.name + " ");
+                        sp = null;
+                    }
+                }
+
+
+            }
+
+            jumpPressed = false;
+            coyoteCounter = 0;
+        }
+    }
+
+    private void CoyoteTime()
+    {
+        if (isGrounded)
+        {
+            coyoteCounter = coyoteTime;
+        }
+        else
+        {
+            coyoteCounter -= Time.deltaTime;
+
+        }
+    }
+
+    private void MoveHorizontally()
+    {
+        if (moveInput > 0)
+        {
+            transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * 1, transform.localScale.y, transform.localScale.z);
+
+        }
+        if (moveInput < 0)
+        {
+            transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * -1, transform.localScale.y, transform.localScale.z);
+
+        }
+        Vector2 v = rb.linearVelocity;
+        v.x = moveInput * moveSpeed;
+        rb.linearVelocity = v;
+    }
+
+    public void ScreenWrap()
     {
         if (isOutOfScreen)
         {
@@ -62,46 +162,12 @@ public class PlayerMovement : MonoBehaviour
 
             isOutOfScreen = false;
         }
-
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundMask);
-
-
-        Vector2 v = rb.linearVelocity;
-        v.x = moveInput * moveSpeed;
-        rb.linearVelocity = v;
-
-        //rb.AddForce(Vector2.right * moveInput * moveSpeed, ForceMode2D.Force);
-        if (isGrounded)
-        {
-            coyoteCounter = coyoteTime;
-        }
-        else
-        {
-            coyoteCounter -= Time.deltaTime;
-
-        }
-
-        if (jumpPressed)
-        {
-            if (coyoteCounter > 0)
-            {
-                if (rb.linearVelocityY <= 0)
-                {
-                    rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
-                    Vector2 jumpVector = Vector2.up * jumpForce;
-                    jumpVector = BonusJump(jumpVector);
-                    rb.AddForce(jumpVector, ForceMode2D.Impulse);
-                    AudioManager.Instance.PlaySFX(AudioManager.SFXClip.jump);
-                }
-
-
-            }
-
-            jumpPressed = false;
-            coyoteCounter = 0;
-        }
     }
+    public void PowerItUp(Vector3 powerVector)
+    {
 
+        rb.AddForce(powerVector, ForceMode2D.Impulse);
+    }
     public void SetMoveInput(float MoveInput)
     {
         moveInput = MoveInput;
@@ -112,22 +178,6 @@ public class PlayerMovement : MonoBehaviour
         {
             isOutOfScreen = true;
         }
-    }
-    Vector2 BonusJump(Vector2 jumpVector)
-    {
-        /*
-        if (rb.linearVelocity.x == 0f)
-        {
-            bonusJumpCounter++;
-            if (bonusJumpCounter > 2)
-            {
-                jumpVector *= bonusJumpMultiplier;
-                bonusJumpCounter = 0;
-                bonusJumpPS.Play();
-            }
-
-        }*/
-        return jumpVector;
     }
 
     void OnDrawGizmosSelected()
